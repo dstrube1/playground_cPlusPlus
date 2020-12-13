@@ -49,8 +49,8 @@ private:
     //void v; //error: variable has incomplete type 'void'
     
     wchar_t wchar;
-    signed wchar_t signed_wchar;
-    unsigned wchar_t unsigned_wchar;
+    //signed wchar_t signed_wchar;//invalid
+    //unsigned wchar_t unsigned_wchar;//invalid
     
     long long long_long;
     int long int_long;

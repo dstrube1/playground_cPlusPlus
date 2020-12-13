@@ -31,8 +31,8 @@ void DataTypeSizes::run(){
     cout << "sizeof(double): " << sizeof(dooble) << "\n";                           //8
     cout << "sizeof(long double): " << sizeof(long_double) << "\n\n";               //16
     cout << "sizeof(wchar_t): " << sizeof(wchar) << "\n";                           //4
-    cout << "sizeof(signed wchar_t): " << sizeof(signed_wchar) << "\n";             //4
-    cout << "sizeof(unsigned wchar_t): " << sizeof(unsigned_wchar) << "\n\n";       //4
+    //cout << "sizeof(signed wchar_t): " << sizeof(signed_wchar) << "\n";             //4
+    //cout << "sizeof(unsigned wchar_t): " << sizeof(unsigned_wchar) << "\n\n";       //4
     cout << "sizeof(long long): " << sizeof(long_long) << "\n";                     //8
     cout << "sizeof(int long): " << sizeof(int_long) << "\n";                       //8
     cout << "sizeof(long int): " << sizeof(long_int) << "\n";                       //8

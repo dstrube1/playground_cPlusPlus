@@ -36,8 +36,8 @@ void DataTypeInitialValues::run(){
     cout << "initial value of float: " << floaty << "\n\n";                        //0*
     cout << "initial value of double: " << dooble << "\n\n";                       //0*
     cout << "initial value of wchar_t: " << wchar << "\n";                         //0*
-    cout << "initial value of signed wchar_t: " << signed_wchar << "\n";           //0*
-    cout << "initial value of unsigned wchar_t: " << unsigned_wchar << "\n\n";     //0*
+    //cout << "initial value of signed wchar_t: " << signed_wchar << "\n";           //0*
+    //cout << "initial value of unsigned wchar_t: " << unsigned_wchar << "\n\n";     //0*
     cout << "initial value of long long: " << long_long << "\n";                   //0*
     cout << "initial value of int long: " << int_long << "\n";                     //0*
     cout << "initial value of long int: " << long_int << "\n";                     //0*
