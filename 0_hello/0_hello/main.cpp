@@ -22,13 +22,15 @@ Copyright © 2018 David Strube. All rights reserved.
 //#include "classA.hpp"
 //#include "DataTypeSizes.hpp"
 //#include "DataTypeInitialValues.hpp"
-#include "Maximums.hpp"
+//#include "Maximums.hpp"
 //#include "Maths.hpp"
+#include "Raii.hpp"
 
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////
 //method declarations
+void testRaii();
 void strangerThingsS2();
 //Pointers and references
 void pointerTest();
@@ -52,7 +54,7 @@ int main(int argc, const char * argv[]) {
 //    pointerTest();
 //    referenceTest();
 //    timeTest();
-    streamTest();
+    //streamTest();
     
     /* MISC:
      //cout << "??="; //this outputs: warning: trigraph ignored [-Wtrigraphs]
@@ -95,8 +97,18 @@ int main(int argc, const char * argv[]) {
 //    Maths maths;
 //    maths.tests();
 //    maths.intLongOverflows();
-
+    
+    
+    cout<<"Done\n";
     return 0;
+}
+
+void testRaii(){
+    Raii *r = new Raii(5);
+    int *x = r->get_n();
+    delete r;
+    cout<<"Testing raii:\n";
+    printf("%d\n", x[0]);
 }
 
 void strangerThingsS2(){
