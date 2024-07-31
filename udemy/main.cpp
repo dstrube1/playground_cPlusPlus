@@ -104,6 +104,7 @@ int main()
 */
 
 //leftoff: https://gbg.udemy.com/course/beginning-c-plus-plus-programming/learn/lecture/9535372#overview
+	
 
 /*
   cout << "What if I try to take in an int but you enter a non-int?: ";
@@ -122,7 +123,8 @@ int main()
   //cout << "y is " << y << endl;
   //Floating point exception (core dumped)
   
-  /*cout << "Enter an int (10.5): ";
+  /*
+  cout << "Enter an int (10.5): ";
   cin >> i;
   cout << "Enter a float / double: \n";
   cin >> d;
@@ -144,7 +146,8 @@ int main()
 			//cout<<".";
 	}
 	printf("\n");
-	printf("Max of int found : %li\n", count);*/
+	printf("Max of int found : %li\n", count);
+ */
 
 /* auto keyword and typeid
   auto a = 8;
