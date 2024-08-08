@@ -175,12 +175,11 @@ int main()
   		cout << "arr2Da[" << i << "][" << j <<"] = "<< arr2Da[i][j] << "\n";
   	}
   }
-  */
   int test[0];
+  */
 
   //vectors
   /*
-  */
   vector <char> vchars {'a', 'e', 'i', 'o', 'u'}; //initializing with values
   vector <int> vints (10); //initializing with size
   vector <int> vints0 (10, 1); //initializing with size & all default values
@@ -233,7 +232,9 @@ int main()
   cout << "2d vector of ints[0].size: " << vints2d[0].size() << endl;
   cout << "2d vector of ints[1].size: " << vints2d[1].size() << endl;
   cout << "2d vector of ints.max_size: " << vints2d.max_size() << endl;
-  
+  */
+
+	
   
   //extern, warning, and error
   /*
