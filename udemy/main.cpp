@@ -41,6 +41,9 @@ double global_d;
 
 int main()
 {
+  cout << boolalpha; //make bools print out as true or false
+  //cout << noboolalpha; //default bool outut as 0 or 1
+
   //initialization, concatenation, cout, cerr, clog, cin
   /*
   //Testing assignment at initialization
@@ -234,8 +237,6 @@ int main()
   cout << "2d vector of ints.max_size: " << vints2d.max_size() << endl;
   */
 
-	
-  
   //extern, warning, and error
   /*
   //extern ex isn't defined here, or anywhere, so the build throws a linker error, but only if we try to use ex
@@ -286,6 +287,47 @@ int main()
   cout << "type of g: " << typeid(g).name() << "\n"; // PKc = Pointer to Konstant char, aka, string
   */
   
+	//Modulo and casting
+  /* 
+	char f1 = 'y'; //1.5f; //float and double with % => error
+	int f2 = 2.0f; //long are fine; char is allowed but may give confusing answers; and bool is allowed but will likely give confusing answers
+	float f3 = f1 % f2;
+	cout << "f3: " << f3 <<endl;
+
+	//using static_cast
+	f3 = static_cast<float> (f1) / f2;
+	//old style casting:
+	//f3 = (float)f1 / f2; //works, but doesn't do the checking that static_cast does
+	cout << "f3: " << f3 <<endl;
+
+	//these are fine, for some reason
+	int f0 = 1.5; 
+	bool f4 = 3;
+	char f5 = 1.5f; 
+  */
+	
+	//Three-way comparison operator, available in c++ 20:
+  /* 
+	//g++ -std=c++20 -o main.o main.cpp
+	int f6 = -1;
+	int f7 = 1;
+	strong_ordering so = f6 <=> f7;
+	cout << "f6 <=> f7 : [can't print a strong_ordering; how to use it? hope to learn this someday...]" << endl;
+	//Not compilable on Rocky Linux laptop, but is compilable on Macbook Pro. Still not able to print the strong_ordering variable
+  */
+
+	//Logical operators
+  /* 
+	bool b0 = true;
+	bool b1 = !b0;	
+	bool b2 = not b0;
+	bool b3 = b0 and b1;
+	bool b4 = b0 && b1;
+	bool b5 = b0 or b1;
+	bool b6 = b0 || b1;
+	cout << "b1: " << b1 << "; b2: " << b2 << "; b3: " << b3 << "; b4: " << b4 << "; b5: " << b5 << "; b6: " << b6 << endl;
+  */
+
   cout << "Done\n";
   return 0;
 }
