@@ -327,6 +327,14 @@ int main()
 	bool b6 = b0 || b1;
 	cout << "b1: " << b1 << "; b2: " << b2 << "; b3: " << b3 << "; b4: " << b4 << "; b5: " << b5 << "; b6: " << b6 << endl;
   */
+	//Compound assignment
+	/**/
+	int a = 1;
+	int b = 2;
+	int c = 3;
+	a *= b + c; // == a = a * (b + c) == 1 * (2 + 3) == 1 * 5 == 5
+	cout<<"a(1) *= b(2) + c(3) = " << a << endl;
+	
 
   cout << "Done\n";
   return 0;
