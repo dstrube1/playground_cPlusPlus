@@ -4,6 +4,7 @@
 //#include <climits>
 //#include <cfloat>
 #include <vector>
+//#include <iomanip>
 
 #define bad_const = 5;
 
@@ -328,12 +329,77 @@ int main()
 	cout << "b1: " << b1 << "; b2: " << b2 << "; b3: " << b3 << "; b4: " << b4 << "; b5: " << b5 << "; b6: " << b6 << endl;
   */
 	//Compound assignment
-	/**/
+	/*
 	int a = 1;
 	int b = 2;
 	int c = 3;
 	a *= b + c; // == a = a * (b + c) == 1 * (2 + 3) == 1 * 5 == 5
 	cout<<"a(1) *= b(2) + c(3) = " << a << endl;
+	*/
+	
+	//Prefix vs postfix
+	/*
+	int a = 1;
+	int b = 1;
+	int aPrefix = ++a;
+	int bPostfix = b++;
+	cout << "a(1) prefix increment: (++a): " << aPrefix << endl;
+	cout << "b(1) postfix increment: (b++): " << bPostfix << endl;
+	*/
+	
+	/*
+	//setprecision(2)
+	//This requires #include <iomanip>
+	cout << fixed << setprecision(2);
+	double a = 1;
+	double b = 3;
+	double c = a / b;
+	double d = 1/3;
+	cout << "with cout << fixed << setprecision(2): " << endl; //0.33
+	cout << "c = a(1) / b(3): " << c << endl; //0.00
+	cout << "d = 1/3: " << d << endl;
+	*/
+
+	//Fall thru switch and enumeration
+	/*
+	enum Color {red,blue,green};
+	Color color = green;
+	switch(color){
+		case green: cout << "color could be green\n";
+		case blue: cout << "color could be blue\n";
+			break;
+		case red: cout << "color could be red\n";
+		//case black: cout << "color could be black\n";
+		//^ error: use of undeclared identifier 'black'
+		default: cout << "color isn't red, blue, green, or black \n";
+		
+	}
+	//Case expressions must be constant expressions 
+	//that evaluate to integer or integer literal(?)
+
+	//So no switch(string) case "hello":... ?
+	//Chars evaluate to integers, but
+	//no switch(float) case 1.5:...?
+	string s = "hey";
+	switch (s) {
+		case "hi": cout<< s <<endl; break;
+		case "hello": cout<< s <<endl; break;
+		case "howdy": cout<< s <<endl; break;
+		default: cout<< s <<endl; break;
+	}
+	//^ error: statement requires expression of integer type ('std::string' (aka 'basic_string<char, char_traits<char>, allocator<char> >') invalid)
+
+	//note: typo in error: mismatched ()s
+
+	float f = 0.1;
+	switch (f) {
+		case 0.2: cout<< f <<endl; break;
+		case 0.3: cout<< f <<endl; break;
+		case 0.4: cout<< f <<endl; break;
+		default: cout<< f <<endl; break;
+	}
+	//^ similar error
+	*/
 	
 
   cout << "Done\n";
