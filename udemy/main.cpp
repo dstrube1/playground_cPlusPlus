@@ -20,6 +20,9 @@ g++ -o main.o main.cpp
 # show all warnings and compile with c++14:
 g++ -Wall -std=c++14 -o main.o main.cpp
 
+#just compile with c++14:
+g++ -std=c++14 -o main.o main.cpp
+
 # compile verbosely:
 g++ -v -o main.o main.cpp
 
@@ -132,6 +135,11 @@ int main()
   cout << "FLT_MAX: " << FLT_MAX << "; FLT_MIN: " << FLT_MIN << "; DBL_MAX: " << DBL_MAX << "; DBL_MIN: " << DBL_MIN << endl;
   cout << "LDBL_MAX: " << LDBL_MAX << "; LDBL_MIN: " << LDBL_MIN << endl;
 
+	int i;
+	cout << "Int input overflow test: enter a ridiculously big number, like 3 billion: ";
+	cin >> i; // 3 billion = 2'147'483'647
+	cout << "You entered " << i << endl;
+	
   //TODO: test sizeof with arrays and objects
 */
 
@@ -347,8 +355,8 @@ int main()
 	cout << "b(1) postfix increment: (b++): " << bPostfix << endl;
 	*/
 	
-	/*
 	//setprecision(2)
+	/*
 	//This requires #include <iomanip>
 	cout << fixed << setprecision(2);
 	double a = 1;
@@ -400,6 +408,47 @@ int main()
 	}
 	//^ similar error
 	*/
+	
+	//for loops
+	//this is valid and endless:
+	//for(;;){cout<<".";}
+	
+	//what about just initialization (1st) and change (3rd), no 2nd step (test)?
+	//Yes:
+	for (int i = 1;;i++){
+		//Remember: must compile with c++14 to get tick marks in numbers
+	
+		//this doesn't seem to overflow and is endless unless there's a break within
+		if (i % 10'000'000 == 0) {
+			// this batches up a while and then prints out a bunch at once
+			cout<<".";
+		}
+		
+		if (i % 100'000'000 == 0) {		
+			break; 
+		}
+	}
+	cout<<"Broke out\n";
+	
+	//range-based for loop
+	int arr[] = {1,2,3};
+	for (auto i : arr){
+		cout << i << " ";
+	}
+	cout << endl;
+	
+	vector <int> vints {1,2,3,4};
+	for (auto i : vints){
+		cout << i << " ";
+	}
+	cout << endl;
+	
+	//also works on collections of characters, aka strings
+	string str = "test";
+	for(auto c : str){
+		cout << c << " ";
+	}
+	cout << endl;
 	
 
   cout << "Done\n";
