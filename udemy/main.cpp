@@ -4,7 +4,8 @@
 //#include <climits>
 //#include <cfloat>
 #include <vector>
-//#include <iomanip>
+#include <iomanip>
+#include <cctype>
 
 #define bad_const = 5;
 
@@ -45,9 +46,17 @@ double global_d;
 
 int main()
 {
+	//This requires #include <iomanip>
+	cout << fixed << setprecision(2);
+	
   cout << boolalpha; //make bools print out as true or false
   //cout << noboolalpha; //default bool outut as 0 or 1
 
+  cout << "Done\n";
+  return 0;
+}
+
+void old_tests(){
   //initialization, concatenation, cout, cerr, clog, cin
   /*
   //Testing assignment at initialization
@@ -357,8 +366,6 @@ int main()
 	
 	//setprecision(2)
 	/*
-	//This requires #include <iomanip>
-	cout << fixed << setprecision(2);
 	double a = 1;
 	double b = 3;
 	double c = a / b;
@@ -410,6 +417,7 @@ int main()
 	*/
 	
 	//for loops
+	/*
 	//this is valid and endless:
 	//for(;;){cout<<".";}
 	
@@ -449,8 +457,5 @@ int main()
 		cout << c << " ";
 	}
 	cout << endl;
-	
-
-  cout << "Done\n";
-  return 0;
+	*/	
 }
