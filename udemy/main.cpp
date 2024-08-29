@@ -5,7 +5,10 @@
 //#include <cfloat>
 #include <vector>
 #include <iomanip>
-#include <cctype>
+#include <cstring> //strcpy, strcat, strlen, strcmp
+#include <cstdlib> //converting c-style strings to numbers
+#include <cctype> //character-bsaed functions
+
 
 #define bad_const = 5;
 
@@ -342,6 +345,7 @@ void old_tests(){
   auto e = true;
   auto f = 'd';
   auto g = "hello!";
+  auto h = string::npos; // 18446744073709551615, or 18,446,744,073,709,551,615, ~18 quintillion
   
   cout << "type of a: " << typeid(a).name() << "\n"; // i = int
   cout << "type of b: " << typeid(b).name() << "\n"; // x = long
@@ -350,6 +354,7 @@ void old_tests(){
   cout << "type of e: " << typeid(e).name() << "\n"; // b = bool
   cout << "type of f: " << typeid(f).name() << "\n"; // c = char
   cout << "type of g: " << typeid(g).name() << "\n"; // PKc = Pointer to Konstant char, aka, string
+  cout << "type of h: " << typeid(h).name() << "\n"; //m?
   */
   
 	//Modulo and casting
