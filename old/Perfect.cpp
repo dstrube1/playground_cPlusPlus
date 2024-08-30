@@ -9,38 +9,40 @@
 
 
 #include<iostream.h>
-int Check (long);
+void Check (int num, int max);
 
 int main()
 {
-int num1=1;
-cout<<"These are the perfect numbers between 1 & 10,000,000:"<<endl;
-Check(num1);
-return 0;
+	int min=1;
+	int max = 100'000;
+	cout<<"These are the perfect numbers between " << min << " & " << max << ":"<<endl;
+	//the fist perfect number greater than 8,128 is > 33M
+	//the largest known perfect number has > 49K digits
+	//https://en.wikipedia.org/wiki/List_of_Mersenne_primes_and_perfect_numbers
+	Check(min, max);
+	return 0;
 }
 
-int Check (long num2)
+void Check (int num, int max)
 {
-int fact, sum;
-	while (num2<=10000000)
+	int fact, sum;
+	while (num <= max)
 	{
-	sum=0;
-	for (fact=1; fact<num2;fact++)
+		if (num % 10'000 == 0) cerr << "."; //write . out to cerr because it doesn't wait like cout does
+		sum = 0;
+		for (fact = 1; fact < num; fact++)
 		{
-		if(num2%fact==0)
-			sum=fact+sum;
+			if(num % fact == 0) sum = fact + sum;
 		}
 
-	if (sum==num2)
+		if (sum == num)
 		{
-		for (fact=1; fact<num2; fact++)
+			for (fact = 1; fact < num; fact++)
 			{
-			if (num2%fact==0)
-				sum=fact+ sum;
+				if (num % fact == 0) sum = fact + sum;
 			}
-			cout<<num2<<" is a perfect number."<<endl;
+			cout << num << " is a perfect number." << endl;
 		}
-		num2++;
+		num++;
 	}
-return 0;
 }
