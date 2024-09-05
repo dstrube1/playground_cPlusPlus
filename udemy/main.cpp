@@ -6,8 +6,11 @@
 #include <vector>
 #include <iomanip>
 #include <cstring> //strcpy, strcat, strlen, strcmp
-#include <cstdlib> //converting c-style strings to numbers
 #include <cctype> //character-bsaed functions
+#include <cmath> //required for sqrt() & abs()
+#include <cstdlib> //required for rand(), converting c-style strings to numbers
+#include <ctime> //required for time()
+
 
 
 #define bad_const = 5;
@@ -52,55 +55,11 @@ int main()
 	//This requires #include <iomanip>
 	cout << fixed << setprecision(2);
 	
-  cout << boolalpha; //make bools print out as true or false
-  //cout << noboolalpha; //default bool outut as 0 or 1
+	cout << boolalpha; //make bools print out as true or false
+	//cout << noboolalpha; //default bool outut as 0 or 1
 
-	//C-style string
-	//char ok[]; //is it okay to declare a c style string with no size specified and no initialization? no
-	char ok[] = "okay"; //what about no size specified and initialization? yes
-	cout << "size of ok[] ''okay'': " << sizeof(ok) << endl;
-	size_t size = sizeof(ok); //the proper datatype of sizes
-	//https://en.cppreference.com/w/cpp/types/size_t
-	char ok0[size]; //is this okay? yes
-	char test [8];
-	cout << "test before assignment:'" << test << "'" << endl;
-	//test="blah";//error: incompatible types in assignment of ‘const char [5]’ to ‘char [8]’
-	//test = "blah123";//same size, still error: invalid array assignment
-	strcpy(test, "blah");//OK; defined here: #include <cstring>
-//	strcpy(test, "blahblahblah");//copying to out of bounds (with compiler warning) - works but potentially dangerous
 
-	strcat(test, "12345"); //concatenate
-	cout << "test:'" << test << "'" << endl;
-	int length = strlen(test); //concatenating can safely affect length
-	cout << "length: " << length << endl;
-	int compare = strcmp(test, "test"); // compare
-	cout << "compared to 'test': " << compare << endl;
-	//char line[4];
-	//cout << "enter some text for line[4] (using getline(line,5)): ";
-	//cin.getline(line,5); //getline's 2nd parameter specifies the length it will get up to; 
-	//if the value of the 2nd parameter is greater than the size of the cstyle string, it will stop at the size of the cstyle string
-	//just using 'cin >> line' stops reading at whitespace; getline does not stop at whitespace
-	//cout << "you entered: " << line << endl;
-
-	//C++ String
-	string s = "test";
-	//s = s.substring(start_index, length);
-	//int i = s.find(s1);
-	//int j = s.find(s1, start_index);
-	//int k = s.rfind(...
-	cout << "in string s ('test'), index of '': " << s.find("") << endl; //0
-	cout << "string::npos: " << string::npos << endl; // 18446744073709551615, or 18,446,744,073,709,551,615, ~18 quintillion
-	//s.erase(start_index, length);
-	//s.clear(); //empties the string
 	
-	//pretty sure this'll crash:
-	//char crash[string::npos];
-	//nope, won't even build: error: size of array ‘crash’ is negative
-	//todo: char crash[math.abs(string::npos)];
-
-	//more getline stuff:
-	//getline(cin, s); //read line from cin stream into s until \n
-	//getline(cin, s, 'x'); //read line until \n or 'x'
 
   cout << "Done\n";
   return 0;
@@ -510,4 +469,98 @@ void old_tests(){
 	}
 	cout << endl;
 	*/	
+
+	//Letter Pyramid 
+	/*string input {};
+	cout << "Enter some string: ";
+	getline(cin, input);
+	for(int i=0; i < input.length(); i++){
+		for(int j = 1; j < input.length() - i; j++)
+			cout << " ";
+		for(int k = 0; k <= i; k++)
+			cout << input.at(k);
+		if(i > 0){
+			for (int h = i - 1; h >= 0; h--)
+				cout << input.at(h);
+		}
+		cout << endl;
+	}*/
+
+	//C-style string
+	/*
+	//char ok[]; //is it okay to declare a c style string with no size specified and no initialization? no
+	char ok[] = "okay"; //what about no size specified and initialization? yes
+	cout << "size of ok[] ''okay'': " << sizeof(ok) << endl;
+	size_t size = sizeof(ok); //the proper datatype of sizes
+	//https://en.cppreference.com/w/cpp/types/size_t
+	char ok0[size]; //is this okay? yes
+	char test [8];
+	cout << "test before assignment:'" << test << "'" << endl;
+	//test="blah";//error: incompatible types in assignment of ‘const char [5]’ to ‘char [8]’
+	//test = "blah123";//same size, still error: invalid array assignment
+	strcpy(test, "blah");//OK; defined here: #include <cstring>
+//	strcpy(test, "blahblahblah");//copying to out of bounds (with compiler warning) - works but potentially dangerous
+
+	strcat(test, "12345"); //concatenate
+	cout << "test:'" << test << "'" << endl;
+	int length = strlen(test); //concatenating can safely affect length
+	cout << "length: " << length << endl;
+	int compare = strcmp(test, "test"); // compare
+	cout << "compared to 'test': " << compare << endl;
+	char line[4];
+	cout << "enter some text for line[4] (using getline(line,5)): ";
+	cin.getline(line,5); //getline's 2nd parameter specifies the length it will get up to; 
+	//if the value of the 2nd parameter is greater than the size of the cstyle string, it will stop at the size of the cstyle string
+	//just using 'cin >> line' stops reading at whitespace; getline does not stop at whitespace
+	cout << "you entered: " << line << endl;
+	*/
+
+	//C++ String
+	/*
+ 	string s = "test";
+	s = s.substring(start_index, length);
+	int i = s.find(s1);
+	int j = s.find(s1, start_index);
+	int k = s.rfind(...
+	cout << "in string s ('test'), index of '': " << s.find("") << endl; //0
+	cout << "string::npos: " << string::npos << endl; // 18446744073709551615, or 18,446,744,073,709,551,615, ~18 quintillion
+	//s.erase(start_index, length);
+	//s.clear(); //empties the string
+	string s0 = {s, 1, 2};
+	s = s + "def"; //ok
+	//s = "123" + "456" + s; //compiler error
+	s = s + "123" + "456"; //no compiler error
+
+	cout << "s: " << s << endl;
+	cout << "s0: " << s0 << endl;
+ 	*/
+	
+	//pretty sure this'll crash:
+	//char crash[string::npos];
+	//nope, won't even build: error: size of array ‘crash’ is negative
+	//todo: char crash[math.abs(string::npos)];
+
+	//Maths
+	/*cout << "sqrt(400.0): " << sqrt(400.0) << endl;
+	
+	long double nposLD = string::npos; 
+	cout << "absolute value of string::npos as long double: " << abs(nposLD) << endl; //1.84467e+19
+
+	long long int nposLLI = string::npos; 
+	cout << "absolute value of string::npos as long long int: " << abs(nposLLI) << endl; // = 1
+
+	long long unsigned nposLLU = string::npos; 
+	cout << "string::npos as long long unsigned: " << nposLLU << endl; 
+	cout << "abs(string::nposLLU): error: call of overloaded ‘abs(long long unsigned int&)’ is ambiguous" << endl; 
+	
+	//just declaring this doesn't seem to do any harm
+	short arr[nposLLU];
+
+	int a = -1;
+	int b = -1;
+	cout << "-1 + -1 = " << a + b << endl;*/
+
+	//more getline stuff:
+	//getline(cin, s); //read line from cin stream into s until \n
+	//getline(cin, s, 'x'); //read line until \n or 'x'
 }
