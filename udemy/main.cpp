@@ -50,6 +50,12 @@ int global; // automatically initialized to 0
 double global_d;
 */
 
+//void pass_by_ref(int &num);
+//void pass_vec_by_ref(const vector<int> &v);
+//void static_test();
+inline int add(int a, int b) { return a + b; }
+
+
 int main()
 {
 	//This requires #include <iomanip>
@@ -563,4 +569,51 @@ void old_tests(){
 	//more getline stuff:
 	//getline(cin, s); //read line from cin stream into s until \n
 	//getline(cin, s, 'x'); //read line until \n or 'x'
+
+	//Random and time
+	/*
+//#include <cstdlib> //required for rand()
+//#include <ctime> //required for time()
+	cout << "RAND_MAX here is: " << RAND_MAX << endl; // 2,147,483,647 =~ 2 billion; guaranteed to be at least 32,767
+	const int min = 1; //lower bound (inclusive)
+	const int max = 100; //upper bound (inclusive)
+	int random_number;
+	const int count = 10;
+	//seed the random number generator
+	srand(time(nullptr));
+	cout << "time(nullptr): " << time(nullptr) << endl;
+	cout << count << " random numbers: ";
+	for (int i=0; i < count; i++){
+		random_number = rand() % max + min;
+		cout << random_number << " ";
+	}
+	cout << endl;
+	*/
+	
+	/*int i = 0;
+	cout << "i before passByRef: " << i << endl;
+	pass_by_ref(i);
+	cout << "i after passByRef: " << i << endl;
+
+	static_test();
+	//cout << "is i0 accessible here?" << i0; no
+	static_test();*/
 }
+
+/* 
+void pass_by_ref(int &num){
+	num++;
+}
+
+void pass_vec_by_ref(const vector<int> &v){
+	//pass collections by reference because they're not all small
+	for(auto i : v){}
+}
+void static_test(){
+	static int i0 = 0;
+	cout << "i0 before increment: " << i0 << endl;
+	i0++;
+	cout << "i0 after increment: " << i0 << endl;
+}
+*/
+
