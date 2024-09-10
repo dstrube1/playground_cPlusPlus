@@ -54,7 +54,8 @@ double global_d;
 //void pass_vec_by_ref(const vector<int> &v);
 //void static_test();
 inline int add(int a, int b) { return a + b; }
-
+//unsigned long long factorial(unsigned long long n);
+//double a_penny_doubled_everyday(int days, double total_amount );
 
 int main()
 {
@@ -75,6 +76,7 @@ int main()
 	cout << "address of i (from i_ptr): " << i_ptr << endl;
 	(*i_ptr)++;
 	cout << "i after (*i_ptr)++ (must use parentheses) : " << i << endl;
+	
 
   cout << "Done\n";
   return 0;
@@ -607,6 +609,23 @@ void old_tests(){
 	static_test();
 	//cout << "is i0 accessible here?" << i0; no
 	static_test();*/
+
+	/*
+ 	cout << "52! = " << factorial(52) << endl; // 9994050523088551936 = 9,994,050,523,088,551,936 = almost 10 quintillion; but maybe not:
+	cout << "53! = " << factorial(53) << endl; // 13175843659825807360
+	cout << "54! = " << factorial(54) << endl; // 10519282829630636032
+	cout << "55! = " << factorial(55) << endl; // 6711489344688881664
+	for (unsigned long long i = 0; i < 100; i++){
+		cout << i << "! = " << factorial(i) << endl; 
+	} //https://zeptomath.com/calculators/factorial.php?number=52&hl=en
+
+	int days = 25; 
+	double total_amount = 0.01;
+	//total_amount = a_penny_doubled_everyday(days, total_amount);
+	//cout << "total_amount = " << total_amount << endl;
+
+*/
+
 }
 
 /* 
@@ -624,5 +643,20 @@ void static_test(){
 	i0++;
 	cout << "i0 after increment: " << i0 << endl;
 }
+
+//recursive function #1
+unsigned long long factorial(unsigned long long n){
+	if (n == 0) return 1;
+	return n * factorial(n - 1);
+}
+
+//recursive function #2
+double a_penny_doubled_everyday(int days, double total_amount) {    
+	cout << "day " << days << ", total amount = " << total_amount << endl;
+    if (days <= 1) return total_amount;
+    total_amount = total_amount * 2;
+    total_amount += a_penny_doubled_everyday(--days, total_amount);
+    return total_amount;
+ }
 */
 
