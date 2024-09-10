@@ -64,8 +64,17 @@ int main()
 	cout << boolalpha; //make bools print out as true or false
 	//cout << noboolalpha; //default bool outut as 0 or 1
 
-
-	
+	//Pointers
+	int i = 10;
+	int *i_ptr = &i; //&: address; *: declare pointer
+	//interesting, when compiling on Mac, this gives a compiler error:
+	//int *i_ptr {&i};
+	cout << "value of i: " << i << endl;
+	cout << "address of i: " << &i << endl;
+	cout << "value of i (from i_ptr): " << *i_ptr << endl; //*: dereference pointer
+	cout << "address of i (from i_ptr): " << i_ptr << endl;
+	(*i_ptr)++;
+	cout << "i after (*i_ptr)++ (must use parentheses) : " << i << endl;
 
   cout << "Done\n";
   return 0;
