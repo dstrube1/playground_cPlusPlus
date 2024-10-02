@@ -1,13 +1,11 @@
 #include <iostream>
 #include <string>
+//#include <climits>
+#include <cfloat>
 
 //Started taking notes while going thru this course:
 //https://gbg.udemy.com/course/beginning-c-plus-plus-programming/
 //Notes started getting cumbersome, so splitting them up into multiple files
-
-//TODO: 
-//1- Verify this still builds and runs
-//2- Remove this code from main.cpp
 
 #define bad_const = 5;
 
@@ -19,18 +17,21 @@ using namespace std;
 # most basic:
 g++ -o L0.o L0.cpp
 
+#To compile with tick marks:
+g++ -o L0.o -std=c++14 L0.cpp
+
 # To run:
 ./L0.o
 
 */
 
 //externs and globals
-/*
+/**/
 extern int ex;
 
 int global; // automatically initialized to 0
 double global_d;
-*/
+/**/
 
 
 int main()
@@ -52,8 +53,10 @@ int main()
   clog << "Hello from clog\n";
   
   cout << "Enter an int (10.5): ";
+  int i;
   cin >> i;
   cout << "Enter a float / double: \n";
+  double d;
   cin >> d;
   cout << "i is " << i << " and d is " << d <<endl;
 
@@ -61,20 +64,20 @@ int main()
   cin >> i;
   cout << "I got this for i: " << i << endl; //"blah" == 0; 123x = 123 now, and 0 later; 1.2 = 1 now, 0 later
   cout << "What about chaining cins (first i, then x)?: ";
-  cin >> i >> x; //if non int is entered, then this cin is skipped; else it works properly
-  cout << "I got this for i: " << i << ", and this for x: " << x << endl;
+  cin >> i >> name; //if non int is entered, then this cin is skipped; else it works properly
+  cout << "I got this for i: " << i << ", and this for x: " << name << endl;
   /**/
 
   //local v global, int / long / double printing / overflow
   /**/
-  int local, i; // may or may not be automatically initialized to 0
+  int local, local0; // may or may not be automatically initialized to 0
   string x; 
-  double d;
-//20 billion
-//ticks marks added in C++14
-int big_number = 20'000'000'000; // -1474836480
-long big_number_L = 20'000'000'000; // 20000000000
-double big_number_D = 20'000'000'000; // 2e+10
+  double d0;
+  //20 billion
+  //ticks marks added in C++14
+  int big_number = 20'000'000'000; // -1474836480
+  long big_number_L = 20'000'000'000; // 20000000000
+  double big_number_D = 20'000'000'000; // 2e+10
 
   cout << "Uninitialized global 1: " << global << "; uninitialized global 2: " << global_d << "; uninitialized local 1: " << d << "; uninitialized local 2: " << local << endl;
   cout << "Here's a big number: " << big_number_L <<endl;
@@ -123,7 +126,6 @@ double big_number_D = 20'000'000'000; // 2e+10
   cout << "FLT_MAX: " << FLT_MAX << "; FLT_MIN: " << FLT_MIN << "; DBL_MAX: " << DBL_MAX << "; DBL_MIN: " << DBL_MIN << endl;
   cout << "LDBL_MAX: " << LDBL_MAX << "; LDBL_MIN: " << LDBL_MIN << endl;
 
-	int i;
 	cout << "Int input overflow test: enter a ridiculously big number, like 3 billion: ";
 	cin >> i; // 3 billion = 2'147'483'647
 	cout << "You entered " << i << endl;
