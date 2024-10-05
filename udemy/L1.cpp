@@ -1,5 +1,4 @@
 #include <iostream>
-#include <string>
 #include <vector>
 
 //Started taking notes while going thru this course:
@@ -13,7 +12,7 @@ using namespace std;
 
 /*
 # To compile:
-g++ -o L1.o L1.cpp
+g++ -o L1.o -std=c++14 L1.cpp
 # without -o, outputs to default a.out
 
 # To run:
@@ -30,7 +29,7 @@ int main()
   //However, compiling with specifying the c++ version number (like "g++ -std=c++14 -o this.o this.cpp" or "g++ -std=c++17 -o this.o this.cpp") works
   const int size = 2;
 
-  int arr1 [5] {0,1,2,3,4};	//declare and initialize array with literal size
+  int arr1 [5] {0,1,2,3,4};	//declare and initialize array with literal size; not available in all versions of c++, but is valid in c++14
   int arr2 [size] {0,1}; //declare and initialize array with const size
   int arr3 [] {1,2,3}; //initialize array so that size is inferred
   int arr4 [size]; //legal to declare without initializing as long as there is size
@@ -78,11 +77,11 @@ int main()
   vector <int> vints0 (10, 1); //initializing with size & all default values
   //initializing with () & {} is not allowed
   
-  int size;
-  size = sizeof(vchars);
-  cout << "Sizeof empty vector of chars: " << size << endl;
-  size = sizeof(vints);
-  cout << "Sizeof empty vector of ints: " << size << endl;
+  int size1;
+  size1 = sizeof(vchars);
+  cout << "Sizeof empty vector of chars: " << size1 << endl;
+  size1 = sizeof(vints);
+  cout << "Sizeof empty vector of ints: " << size1 << endl;
   //^both are 24 (bytes?) by default
   
   cout << "Actual size of empty vector of ints: " << vints.size() << endl;
@@ -119,8 +118,8 @@ int main()
   		{1,2,3},
   		{1,2,3,5}
   	};
-  size = sizeof(vints2d);
-  cout << "Sizeof 2d vector of ints: " << size << endl;
+  size1 = sizeof(vints2d);
+  cout << "Sizeof 2d vector of ints: " << size1 << endl;
   cout << "2d vector of ints.size: " << vints2d.size() << endl;
   cout << "2d vector of ints[0].size: " << vints2d[0].size() << endl;
   cout << "2d vector of ints[1].size: " << vints2d[1].size() << endl;
@@ -170,13 +169,13 @@ the variable will be pointing to a new function's activation record
 int *never_do_this(){
 	int size {};
 	//...
-	return &size;
+	return &size; //this throws a warning, but not an error
 }
 
 int *or_this(){
 	int size{};
 	int *ptr {&size};
 	//...
-	return ptr;
+	return ptr; //this throws neither a warning nor an error
 }
 /**/
