@@ -504,5 +504,24 @@ int *make_array(size_t size, int initial_value){
 	}
 	return new_arr;
 }
+
+lesson 148 at 4:21
+Shallow::Shallow(const Shallow &source) : data(source.data) {
+	cout << "Copy constructor - shallow" << endl;
+	//Shallow copy - only the pointer is copied - not what it is pointing to.
+	//source and the newly created object both point to the same data area.
+	//When a copied pointer goes out of scope, it is destroyed.
+	//When the copy pointer is destroyed, the source pointer is no longer valid
+}
+
+int main(){
+	Shallow obj{100};
+	display_shallow(obj); //crash here?
+	// obj's data has been released
+	obj.set_data(1000); //or here?
+	Shallow obj0 {obj}; //or here?
+	cout << "Still alive?" << endl;
+	return 0;
+}
 */
 
