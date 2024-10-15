@@ -7,13 +7,11 @@
 
 using namespace std;
 
-//TODO Verify this builds and runs
-//TODO Cleanup main.cpp
-
 /*
 # To compile:
 g++ -o L1.o -std=c++14 L1.cpp
 # without -o, outputs to default a.out
+# without the -std=c++14, get errors from declarations of arrays, vectors, and pointers
 
 # To run:
 ./L1.o
