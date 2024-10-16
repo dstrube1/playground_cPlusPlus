@@ -372,7 +372,7 @@ int *make_array(size_t size, int initial_value){
 	return new_arr;
 }
 
-//lesson 148 at 4:21
+//TODO: revisit lesson 148 at 4:21
 Shallow::Shallow(const Shallow &source) : data(source.data) {
 	cout << "Copy constructor - shallow" << endl;
 	//Shallow copy - only the pointer is copied - not what it is pointing to.
@@ -391,7 +391,7 @@ int main(){
 	return 0;
 }
 
-//lesson 149 at 1:37
+//TODO: revisit lesson 149 at 1:37
 Deep::Deep(const Deep &source){
 	data = new int;
 	*data = *source.data;
@@ -403,5 +403,9 @@ Deep:Deep(const Deep &source) : Deep{*source.data} {
 	cout << "Copy constructor - deep & delegated" << endl;
 }
 
+//TODO: make folder "constructors" to explore lessons 148-150
+Also, in lesson 150, around 14:50 - noexcept? Was this explained, and if so when?
+https://en.cppreference.com/w/cpp/language/noexcept
+https://stackoverflow.com/questions/10787766/when-should-i-really-use-noexcept
 */
 
