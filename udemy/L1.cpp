@@ -159,21 +159,3 @@ int main()
 	return 0;
 }
 
-/*
-Never return a pointer to a local variable - it will compile and run, 
-but fail as local varaibles are removed from the stack; 
-the variable will be pointing to a new function's activation record
-*/
-int *never_do_this(){
-	int size {};
-	//...
-	return &size; //this throws a warning, but not an error
-}
-
-int *or_this(){
-	int size{};
-	int *ptr {&size};
-	//...
-	return ptr; //this throws neither a warning nor an error
-}
-/**/
