@@ -1,7 +1,8 @@
 #include <iostream>
 #include <string>
-//#include <climits>
+#include <climits>
 #include <cfloat>
+#include <iomanip>
 
 //Started taking notes while going thru this course:
 //https://gbg.udemy.com/course/beginning-c-plus-plus-programming/
@@ -36,6 +37,12 @@ double global_d;
 
 int main()
 {
+	//This requires #include <iomanip>
+	cout << fixed << setprecision(2);
+	
+	cout << boolalpha; //make bools print out as true or false
+	//cout << noboolalpha; //default bool outut as 0 or 1
+
     //initialization, concatenation, cout, cerr, clog, cin
   /**/
   //Testing assignment at initialization

@@ -1,5 +1,8 @@
 #include <iostream>
 #include <vector>
+#include <cstdlib> //required for rand(), converting c-style strings to numbers
+#include <cstring> //strcpy, strcat, strlen, strcmp
+#include <cctype> //character-bsaed functions
 
 //Started taking notes while going thru this course:
 //https://gbg.udemy.com/course/beginning-c-plus-plus-programming/
