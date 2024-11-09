@@ -1,14 +1,15 @@
 #include <iostream>
 #include <string>
-//#include "shallow.h"
+#include "shallow.h"
 
 using namespace std;
 
 /*
 # To compile:
 # most basic:
-g++ -o main.o main.cpp shallow.cpp
+g++ -o main.o -std=c++14 main.cpp shallow.cpp
 # without -o, outputs to default a.out
+# without -std=c++14, builtin copy constructor fails to compile, as well as class method implementations outside the class
 
 # To run:
 ./main.o
@@ -88,7 +89,8 @@ int main()
 ////////////////
 //shallow
 ////////////////
-	/*cout << "\nCreating s0, shallow object with no initialization:" << endl;
+	/**/
+	cout << "\nCreating s0, shallow object with no initialization:" << endl;
 	shallow s0;
 
 	cout << "\nCreating s1, via shallow copy of s0:" << endl;
@@ -97,7 +99,8 @@ int main()
 	cout << "\nCalling getPriv0 from s1:" << endl;
 	s1.getPriv0();
 
-	cout << "\nDone. Destructors get called automatically after this." << endl;*/
+	cout << "\nDone. Destructors get called automatically after this." << endl;
+	/**/
 	
 	return 0;
 }
