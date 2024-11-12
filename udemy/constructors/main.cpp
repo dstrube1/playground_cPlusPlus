@@ -1,13 +1,14 @@
 #include <iostream>
 #include <string>
 #include "shallow.h"
+//#include "deep.h"
 
 using namespace std;
 
 /*
 # To compile:
 # most basic:
-g++ -o main.o -std=c++14 main.cpp shallow.cpp
+g++ -o main.o -std=c++14 main.cpp shallow.cpp deep.cpp
 # without -o, outputs to default a.out
 # without -std=c++14, builtin copy constructor fails to compile, as well as class method implementations outside the class
 
@@ -98,9 +99,27 @@ int main()
 
 	cout << "\nCalling getPriv0 from s1:" << endl;
 	s1.getPriv0();
-
-	cout << "\nDone. Destructors get called automatically after this." << endl;
 	/**/
+
+////////////////
+//deep
+////////////////
+	/**
+//TODO - flesh this out / fix this / etc
+	cout << "\nCreating d0, deep object with no initialization:" << endl;
+	deep d0;
+
+	cout << "\nCreating d1, via deep copy of d0:" << endl;
+	deep d1 {d0};
+
+	cout << "\nCalling getPriv0 from d1:" << endl;
+	d1.getPriv0();
+	/*/
+
+////////////////
+//the end
+////////////////
+	cout << "\nDone. Destructors get called automatically after this." << endl;
 	
 	return 0;
 }
