@@ -1,15 +1,13 @@
+#include "deep.h"
 #include <iostream>
+
+using namespace std;
 
 /*
 	private:
-		int priv0;
+		int *priv0;
 		string priv1 {"can be declared with initial value"};
 */
-
-int getPriv0() {
-	cout << "getPriv0 called by " << priv1 << endl;
-	return priv0;
-}
 
 //Copy constructor
 deep::deep (const deep &source)
@@ -19,6 +17,11 @@ deep::deep (const deep &source)
 	cout << "Copy constructor of " << source.priv1 << endl;
 	//Note 1: copy constructor is provided by the compiler by default if not explicitly made
 	//Note 2: any method of shallow that uses a shallow object will call the copy constructor first
+}
+
+int getPriv0() {
+	cout << "getPriv0 called by " << priv1 << endl;
+	return *priv0;
 }
 
 //Destructor

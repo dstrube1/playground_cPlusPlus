@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include "shallow.h"
-//#include "deep.h"
+#include "deep.h"
 
 using namespace std;
 
@@ -91,14 +91,19 @@ int main()
 //shallow
 ////////////////
 	/**/
-	cout << "\nCreating s0, shallow object with no initialization:" << endl;
-	shallow s0;
+//	cout << "\nCreating s0, shallow object with no initialization:" << endl;
+//	shallow s0;
 
-	cout << "\nCreating s1, via shallow copy of s0:" << endl;
-	shallow s1 {s0};
+//	cout << "\nCreating s1, via shallow copy of s0:" << endl;
+//	shallow s1 {s0};
 
-	cout << "\nCalling getPriv0 from s1:" << endl;
-	s1.getPriv0();
+//	cout << "\nCalling getPriv0 from s1:" << endl;
+//	s1.getPriv0(); 
+//when calling getPriv0 with s1, a copy is made for getPriv0
+//when that method is done, the copy goes out of scape and is automatically destroyed, 
+//which will cause a problem for s1
+//	cout << "\nStill alive after calling getPriv0 from s1?" << endl;
+//	No: segmentation fault
 	/**/
 
 ////////////////
@@ -120,6 +125,12 @@ int main()
 //the end
 ////////////////
 	cout << "\nDone. Destructors get called automatically after this." << endl;
+	
+	/*
+	If shallow s0 and s1 are left intact, then when destructors are called:
+main.o(62977,0x11458d600) malloc: *** error for object 0x280: pointer being freed was not allocated
+main.o(62977,0x11458d600) malloc: *** set a breakpoint in malloc_error_break to debug
+	*/
 	
 	return 0;
 }

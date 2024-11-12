@@ -6,7 +6,7 @@ using namespace std;
 
 class deep{
 	private:
-		int priv0;
+		int *priv0;
 		string priv1 {"can be declared with initial value"};
 	public:
 		deep (int p0, string p1);
