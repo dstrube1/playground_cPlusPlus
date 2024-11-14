@@ -19,12 +19,12 @@ deep::deep (const deep &source)
 	//Note 2: any method of shallow that uses a shallow object will call the copy constructor first
 }
 
-int getPriv0() {
+int deep::getPriv0() {
 	cout << "getPriv0 called by " << priv1 << endl;
 	return *priv0;
 }
 
 //Destructor
-~shallow(){
+deep::~deep(){
 	cout << "shallow destructor of " << priv1 << "\n"; 
 }

@@ -90,9 +90,9 @@ int main()
 ////////////////
 //shallow
 ////////////////
-	/**/
-//	cout << "\nCreating s0, shallow object with no initialization:" << endl;
-//	shallow s0;
+	/**
+	cout << "\nCreating s0, shallow object with no initialization:" << endl;
+	shallow s0;
 
 //	cout << "\nCreating s1, via shallow copy of s0:" << endl;
 //	shallow s1 {s0};
@@ -104,7 +104,7 @@ int main()
 //which will cause a problem for s1
 //	cout << "\nStill alive after calling getPriv0 from s1?" << endl;
 //	No: segmentation fault
-	/**/
+	**/
 
 ////////////////
 //deep
