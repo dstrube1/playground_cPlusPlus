@@ -14,6 +14,7 @@ not an accidentally commented out declaration :-p
 //Public method implementations
 
 shallow::shallow (){
+	priv0 = new int; //allocate storage
 	cout << "Shallow contructor with no params. Leaving privates with their default values." << endl;
 }
 

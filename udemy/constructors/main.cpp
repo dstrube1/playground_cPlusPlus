@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include "shallow_without_pointer.h"
 #include "shallow.h"
 #include "deep.h"
 
@@ -8,7 +9,7 @@ using namespace std;
 /*
 # To compile:
 # most basic:
-g++ -o main.o -std=c++14 main.cpp shallow.cpp deep.cpp
+g++ -o main.o -std=c++14 main.cpp shallow.cpp deep.cpp shallow_without_pointer.cpp
 # without -o, outputs to default a.out
 # without -std=c++14, builtin copy constructor fails to compile, as well as class method implementations outside the class
 
@@ -57,6 +58,10 @@ clazz::~clazz(){
 	cout << "clazz destructor of " << priv1 << "\n";
 }
 
+//Declaring locally defined method that will use a shallow_without_pointer object, passed in by value, 
+//but should not cause a blow up
+void display_shallow_without_pointer(shallow_without_pointer swop);
+
 int main()
 {
 ////////////////
@@ -90,36 +95,57 @@ int main()
 ////////////////
 //shallow
 ////////////////
-	/**
+	/**/
 	cout << "\nCreating s0, shallow object with no initialization:" << endl;
 	shallow s0;
 
-//	cout << "\nCreating s1, via shallow copy of s0:" << endl;
-//	shallow s1 {s0};
+	cout << "Creating s1, shallow object with initialization:" << endl;
+	shallow s1 {1, "s1"};
 
-//	cout << "\nCalling getPriv0 from s1:" << endl;
-//	s1.getPriv0(); 
+	cout << "Creating s2, via shallow copy of s1:" << endl;
+	shallow s2 {s1};
+
+	cout << "Calling getPriv0 from s2:" << endl;
+	s2.getPriv0(); 
 //when calling getPriv0 with s1, a copy is made for getPriv0
 //when that method is done, the copy goes out of scape and is automatically destroyed, 
 //which will cause a problem for s1
-//	cout << "\nStill alive after calling getPriv0 from s1?" << endl;
-//	No: segmentation fault
-	**/
+	cout << "Still alive after calling getPriv0 from s2?" << endl;
+//	If this is not included in the default constructor, then No: segmentation fault:
+//priv0 = new int; //allocate storage
+//If the ^ is included in the default constructor, then it won't fail here, but will fail when 
+	/**/
+	
+	//shallow_without_pointer
+	cout << "\nTrying shallow_without_pointer copy constructor" << endl;
+	shallow_without_pointer swop0;
+	shallow_without_pointer swop1{7, "swop1"};
+	//Harmless shallow copy?
+	shallow_without_pointer swop2{swop1};
+	int result = swop1.getPriv0();
+	cout << "Result of swop1.getPriv0(): " << result << endl;
+	display_shallow_without_pointer(swop2);
+	//Key takeaway- shallow copy seems to be safe as long as it's done without a pointer,
+	//but that may be contrived
 
 ////////////////
 //deep
 ////////////////
-	/**
-//TODO - flesh this out / fix this / etc
+	/**/
 	cout << "\nCreating d0, deep object with no initialization:" << endl;
 	deep d0;
 
-	cout << "\nCreating d1, via deep copy of d0:" << endl;
-	deep d1 {d0};
+	cout << "Creating d1, deep object with initialization:" << endl;
+	deep d1 {1,"d1"};
 
-	cout << "\nCalling getPriv0 from d1:" << endl;
-	d1.getPriv0();
-	/*/
+	cout << "Creating d2, via deep copy of d1:" << endl;
+	deep d2 {d1};
+
+	cout << "Calling getPriv0 from d2:" << endl;
+	d2.getPriv0();
+	
+	//TODO - try alternate deep copy constructor, one that uses delegation
+	/**/
 
 ////////////////
 //the end
@@ -135,3 +161,8 @@ main.o(62977,0x11458d600) malloc: *** set a breakpoint in malloc_error_break to 
 	return 0;
 }
 
+void display_shallow_without_pointer(shallow_without_pointer swop){
+	cout << "swop.getPriv0() called from method declared and implemented outside the swop class: ";
+	cout << swop.getPriv0() << endl; //output: getPriv0 called by swop1 copied copied
+	//Interesting, seems to be getting double copied
+}

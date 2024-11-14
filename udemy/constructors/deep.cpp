@@ -9,15 +9,38 @@ using namespace std;
 		string priv1 {"can be declared with initial value"};
 */
 
-//Copy constructor
-deep::deep (const deep &source)
-: priv0 {source.priv0}, priv1 {source.priv1 + " copied"} { 
-//^Alternatively, can delegate from copy constructor to another construtor, like Constructor initialization lists, like so:
-//: deep (source.priv0, source.priv1 + " copied") { 
-	cout << "Copy constructor of " << source.priv1 << endl;
-	//Note 1: copy constructor is provided by the compiler by default if not explicitly made
-	//Note 2: any method of shallow that uses a shallow object will call the copy constructor first
+deep::deep (){
+	priv0 = new int; //allocate storage
+	cout << "Deep contructor with no params. Leaving privates with their default values." << endl;
 }
+
+deep::deep (int p0, string p1){
+	priv0 = new int; //allocate storage
+	*priv0 = p0;
+	priv1 = p1;
+	cout << "Deep contructor with 2 params." << endl;
+}
+
+//Copy constructor
+/**/
+deep::deep (const deep &source)
+{ 
+	//Deep copy - create new storage and copy values
+	priv0 = new int; //allocate storage
+	*priv0 = *source.priv0;
+	priv1 = source.priv1 + " deep copy";
+	cout << "Deep copy constructor of " << source.priv1 << endl;
+}
+/**/
+
+//Alternative copy constructor - delegate to parameterized constructor - try this too:
+//Copy constructor
+/**
+deep::deep (const deep &source) : deep{*source.priv0, source.priv1 + " copy"}
+{ 
+	cout << "Deep copy constructor of " << source.priv1 << " using delegation" << endl;
+}
+**/
 
 int deep::getPriv0() {
 	cout << "getPriv0 called by " << priv1 << endl;
@@ -26,5 +49,6 @@ int deep::getPriv0() {
 
 //Destructor
 deep::~deep(){
-	cout << "shallow destructor of " << priv1 << "\n"; 
+	delete priv0;
+	cout << "Deep destructor of " << priv1 << "\n"; 
 }
