@@ -3,13 +3,14 @@
 #include "shallow_without_pointer.h"
 #include "shallow.h"
 #include "deep.h"
+#include "move_ctor.h"
 
 using namespace std;
 
 /*
 # To compile:
 # most basic:
-g++ -o main.o -std=c++14 main.cpp shallow.cpp deep.cpp shallow_without_pointer.cpp
+g++ -o main.o -std=c++14 main.cpp shallow.cpp deep.cpp shallow_without_pointer.cpp move_ctor.cpp
 # without -o, outputs to default a.out
 # without -std=c++14, builtin copy constructor fails to compile, as well as class method implementations outside the class
 
@@ -62,8 +63,33 @@ clazz::~clazz(){
 //but should not cause a blow up
 void display_shallow_without_pointer(shallow_without_pointer swop);
 
+//Place for old code:
+void old();
+
 int main()
 {
+	move_ctor m{};
+	int x {100};
+	m.func0(x); //this is fine: x is an l-value
+	//m.func0(200); //error - 200 is an r-value
+	
+	m.func1(200); //this is fine: 200 is an r-value
+	//m.func1(x); //error: x is an l-value
+	
+	//overloaded method
+	m.func2(x); 
+	m.func2(200);
+	
+/*
+LEFTOFF=6:23
+
+https://drive.google.com/file/d/18rWFQqYduswtMpUa-DV-2JcpL_6-T6MK/view
+*/
+
+	return 0;
+}
+
+void old(){
 ////////////////
 //clazz
 ////////////////
@@ -144,7 +170,7 @@ int main()
 	cout << "Calling getPriv0 from d2:" << endl;
 	d2.getPriv0();
 	
-	//TODO - try alternate deep copy constructor, one that uses delegation
+	//Try the alternate deep copy constructor- it uses delegation
 	/**/
 
 ////////////////
@@ -153,12 +179,10 @@ int main()
 	cout << "\nDone. Destructors get called automatically after this." << endl;
 	
 	/*
-	If shallow s0 and s1 are left intact, then when destructors are called:
+	If shallow s0 and s1 are left intact, then when destructors are called the program ends like this:
 main.o(62977,0x11458d600) malloc: *** error for object 0x280: pointer being freed was not allocated
 main.o(62977,0x11458d600) malloc: *** set a breakpoint in malloc_error_break to debug
 	*/
-	
-	return 0;
 }
 
 void display_shallow_without_pointer(shallow_without_pointer swop){
