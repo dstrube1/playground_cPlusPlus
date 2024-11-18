@@ -63,22 +63,22 @@ clazz::~clazz(){
 //but should not cause a blow up
 void display_shallow_without_pointer(shallow_without_pointer swop);
 
-//Place for old code:
-void old();
+//Explore shallow vs deep copying
+void shallow_vs_deep();
 
 int main()
 {
 	move_ctor m{};
 	int x {100};
-	m.func0(x); //this is fine: x is an l-value
-	//m.func0(200); //error - 200 is an r-value
+	m.func_0(x); //this is fine: x is an l-value
+	//m.func_0(200); //error - 200 is an r-value
 	
-	m.func1(200); //this is fine: 200 is an r-value
-	//m.func1(x); //error: x is an l-value
+	m.func_1(200); //this is fine: 200 is an r-value
+	//m.func_1(x); //error: x is an l-value
 	
 	//overloaded method
-	m.func2(x); 
-	m.func2(200);
+	m.func_2(x); 
+	m.func_2(200);
 	
 /*
 LEFTOFF=6:23
@@ -89,7 +89,7 @@ https://drive.google.com/file/d/18rWFQqYduswtMpUa-DV-2JcpL_6-T6MK/view
 	return 0;
 }
 
-void old(){
+void shallow_vs_deep(){
 ////////////////
 //clazz
 ////////////////
