@@ -16,13 +16,20 @@ class move_ctor{
 	private:
 		int *data;
 	public:
-		move_ctor ();
+		move_ctor (); //no param
+		move_ctor(int d); //one param
+		move_ctor(const move_ctor &source); //copy constructor
+		//move_ctor(move_ctor &&source) noexcept; //move constructor - what does the noexcept keyword do here?
 		
-		void func0(int &num);
-		void func1(int &&num);
+		void func_0(int &num);
+		void func_1(int &&num);
 		//overloaded function so calling it either way will be fine
-		void func2(int &num);
-		void func2(int &&num);
+		void func_2(int &num);
+		void func_2(int &&num);
+
+		//not setting or getting the pointer, but rather what it points to, its value
+		void set_data(int d);
+		int get_data();
 		
 		//Destructor
 		~move_ctor();
