@@ -1,16 +1,22 @@
 #include <iostream>
 #include <string>
-#include "shallow_without_pointer.h"
+#include "shallow_without_pointer.h" //TODO - move this class to here 
 #include "shallow.h"
 #include "deep.h"
 #include "move_ctor.h"
+#include <vector>
 
 using namespace std;
 
 /*
 # To compile:
-# most basic:
-g++ -o main.o -std=c++14 main.cpp shallow.cpp deep.cpp shallow_without_pointer.cpp move_ctor.cpp
+
+# testing shallow vs deep
+g++ -o main.o -std=c++14 main.cpp shallow.cpp deep.cpp shallow_without_pointer.cpp
+
+# testing move constructor
+g++ -o main.o -std=c++14 main.cpp move_ctor.cpp
+
 # without -o, outputs to default a.out
 # without -std=c++14, builtin copy constructor fails to compile, as well as class method implementations outside the class
 
@@ -19,11 +25,17 @@ g++ -o main.o -std=c++14 main.cpp shallow.cpp deep.cpp shallow_without_pointer.c
 
 */
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////clazz 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //If not defined in another file (and referenced like "#include "blah.h"), then this must be declared above the main function
 class clazz{
 	private:
 		int priv0;
-		string priv1 {"can be declared with initial value"};
+		string priv1 {"initial value"};
+		const static int constStaticPriv {2}; 
+		static int staticPriv; //C++ forbids in-class initialization of non-const static members
 	public:
 		clazz (int p0, string p1);
 		clazz ();
@@ -37,7 +49,12 @@ class clazz{
 		//clazz (int p0 = 0, string p1 = "a");
 		*/
 		//But better to implement them outside the class (instead we'll just declare them), along with other methods, like this one:
-		int getPriv0();
+		int getPriv0() /*const*/; 
+		void setPriv0(int p0);
+
+		static int staticPublic;
+		int nonStaticPublic;
+		static int getStaticPriv();
 
 		//Destructor
 		~clazz();//{ };
@@ -49,15 +66,49 @@ clazz::clazz (int p0, string p1) : priv0 {p0}, priv1 {p1} {cout << "Constructor 
 //Delegating constructor
 clazz::clazz () : clazz{0, "default"} { cout << "Default constructor, no parameters, delegating to constructor with params. (The constructor this is delegated to does its stuff before this is printed.)\n";} 
 
+//initialize static data
+int clazz::staticPriv = 1;
+
 int clazz::getPriv0() {
-	cout << "getPriv0 called by " << priv1 << endl;
+	//TODO - test __func__ predefined identifier
+	cout << __func__ << " called by " << priv1 << endl;
 	return priv0;
+	//TODO: does this work as well?
+	//return this->priv0;
+}
+
+void clazz::setPriv0(int priv0){
+	this->priv0 = priv0;
+	//must use 'this' here because otherwise it's ambiguous and scope rules say that the parameter would just assign the value to itself
+}
+
+/*static*/ int clazz::getStaticPriv(){
+	return staticPriv;
+	//Called like this: cout << clazz::getStaticPriv();
 }
 
 //Destructor
 clazz::~clazz(){
 	cout << "clazz destructor of " << priv1 << "\n";
 }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////END clazz
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////struct
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+struct struckd { //members are public by default (members of classes are private by default)
+	int i;
+	int get_i() { return i;}
+/*
+Use struct for passive objects with public access
+Don't declare methods in struct (why? is private not possible in struct? or are structs inefficient?)
+Use class for active objects with private access
+
+*/
+};
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////END struct
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //Declaring locally defined method that will use a shallow_without_pointer object, passed in by value, 
 //but should not cause a blow up
@@ -65,6 +116,8 @@ void display_shallow_without_pointer(shallow_without_pointer swop);
 
 //Explore shallow vs deep copying
 void shallow_vs_deep();
+
+void non_clazz_method(clazz c);
 
 int main()
 {
@@ -79,14 +132,35 @@ int main()
 	//overloaded method
 	m.func_2(x); 
 	m.func_2(200);
-	
-/*
-LEFTOFF=6:23
 
-https://drive.google.com/file/d/18rWFQqYduswtMpUa-DV-2JcpL_6-T6MK/view
-*/
+	vector<move_ctor> vec {};
+	//pushing unnamed temporary objects, i.e., r-values; compiler will use the copy constructor to make them
+	for(int i = 10; i <= 80; i+=10){
+		vec.push_back(move_ctor{i});
+	}
+	//Note: vector makes copies of the objects behind the scenes as well as it grows
+	//Does this also call the destructor now or later?
+	cout << "move_ctor destructor called yet?" << endl;
+
+	//Next, testing const stuff
+	const clazz c0;
+
+	//do all of these fail?
+	c0.setPriv0(0);
+	c0.getPriv0();
+
+	struckd s;
+	cout << "s.i: " << s.i << endl;
+	cout << "s.get_i(): " << s.get_i() << endl;
+	
 
 	return 0;
+}
+
+void display_shallow_without_pointer(shallow_without_pointer swop){
+	cout << "swop.getPriv0() called from method declared and implemented outside the swop class: ";
+	cout << swop.getPriv0() << endl; //output: getPriv0 called by swop1 copied copied
+	//Interesting, seems to be getting double copied
 }
 
 void shallow_vs_deep(){
@@ -185,8 +259,12 @@ main.o(62977,0x11458d600) malloc: *** set a breakpoint in malloc_error_break to 
 	*/
 }
 
-void display_shallow_without_pointer(shallow_without_pointer swop){
-	cout << "swop.getPriv0() called from method declared and implemented outside the swop class: ";
-	cout << swop.getPriv0() << endl; //output: getPriv0 called by swop1 copied copied
-	//Interesting, seems to be getting double copied
+void non_clazz_method(/*const*/clazz /*&*/c){ //TODO - try with the const modifier and pointer indicator (&) in the param list- it may build here but compiler fail when it calls the method
+	//testing to see at what point does this fail when a const clazz is passed in
+	cout << "Did this even build?\n";
+	c.setPriv0(0);
+	cout << "After setPriv0\n";
+	c.getPriv0();
+	cout << "After getPriv0\n";
+
 }
