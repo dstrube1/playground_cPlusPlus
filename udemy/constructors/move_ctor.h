@@ -19,7 +19,8 @@ class move_ctor{
 		move_ctor (); //no param
 		move_ctor(int d); //one param
 		move_ctor(const move_ctor &source); //copy constructor
-		//move_ctor(move_ctor &&source) noexcept; //move constructor - what does the noexcept keyword do here?
+		move_ctor(move_ctor &&source) noexcept; //move constructor
+		// what does the noexcept keyword do ^here?
 		
 		void func_0(int &num);
 		void func_1(int &&num);

@@ -36,15 +36,15 @@ move_ctor::move_ctor(const move_ctor &source){ //copy constructor
 
 //A move constructor is like a deep copy constructor, except after copying the address of the resource from the source to the current ojbect, we then null out the pointer in the source pointer - very efficient
 //no const qualifier for the paramater source- this way we can null out its pointer
-/*move_ctor::move_ctor(move_ctor &&source) noexcept : data {source.data} {
+/**/move_ctor::move_ctor(move_ctor &&source) noexcept : data {source.data} {
+	cout << "move_ctor move constructor of " << *source.data << endl;
 	//no need for deep copy; shallow copy is safe here because of the immediate nulling
-	source = nullptr;
-	//TODO - try the vector pushes with and without this move constructor
-}*/
+	source.data = nullptr;
+	//Interestingly, if both the copy and move constructors are uncommented, program will default to move constructor. Because move constructor is implemented last, maybe?
+}/**/
 
 void move_ctor::func_0(int &num){
-	//TODO code to get method name? this is possible in Java. Is it possible in C++?
-	cout << "This function (func_0) doesn't do anything except illustrate some of the stuff in the Move Constructor lesson" << endl;
+	cout << __func__ << " called with an l-value" << endl;
 	/*
 	int x {100};
 	func_0(x); //this is fine: x is an l-value
@@ -54,7 +54,7 @@ void move_ctor::func_0(int &num){
 }
 
 void move_ctor::func_1(int &&num){
-	cout << "This function (func_1) doesn't do anything except illustrate some of the stuff in the Move Constructor lesson" << endl;
+	cout << __func__ << " called with an r-value" << endl;
 	/*
 	int x {100};
 	func_1(200); //this is fine: 200 is an r-value
@@ -64,20 +64,15 @@ void move_ctor::func_1(int &&num){
 }
 
 void move_ctor::func_2(int &num){
-	cout << "func_2 called with an l-value" << endl;
+	cout << __func__ << " called with an l-value" << endl;
 }
 void move_ctor::func_2(int &&num){
-	cout << "func_2 called with an r-value" << endl;
+	cout << __func__ << " called with an r-value" << endl;
 }
 
 //not setting or getting the pointer, but rather what it points to, its value
 void move_ctor::set_data(int d) {*data = d;}
 int move_ctor::get_data() {return *data; }
-
-
-/*
-LEFTOFF=6:23
-*/
 
 //Destructor
 move_ctor::~move_ctor(){

@@ -45,7 +45,7 @@ Shallow copy:
 */
 
 int shallow::getPriv0() {
-	cout << "getPriv0 called by " << priv1 << endl;
+	cout << __func__ << " called by " << priv1 << endl;
 	return *priv0;
 }
 

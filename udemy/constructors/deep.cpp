@@ -43,7 +43,7 @@ deep::deep (const deep &source) : deep{*source.priv0, source.priv1 + " copy"}
 **/
 
 int deep::getPriv0() {
-	cout << "getPriv0 called by " << priv1 << endl;
+	cout << __func__ << " called by " << priv1 << endl;
 	return *priv0;
 }
 

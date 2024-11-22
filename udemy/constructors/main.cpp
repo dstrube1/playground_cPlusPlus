@@ -1,6 +1,5 @@
 #include <iostream>
 #include <string>
-#include "shallow_without_pointer.h" //TODO - move this class to here 
 #include "shallow.h"
 #include "deep.h"
 #include "move_ctor.h"
@@ -10,12 +9,7 @@ using namespace std;
 
 /*
 # To compile:
-
-# testing shallow vs deep
-g++ -o main.o -std=c++14 main.cpp shallow.cpp deep.cpp shallow_without_pointer.cpp
-
-# testing move constructor
-g++ -o main.o -std=c++14 main.cpp move_ctor.cpp
+g++ -o main.o -std=c++14 main.cpp shallow.cpp deep.cpp move_ctor.cpp
 
 # without -o, outputs to default a.out
 # without -std=c++14, builtin copy constructor fails to compile, as well as class method implementations outside the class
@@ -26,7 +20,7 @@ g++ -o main.o -std=c++14 main.cpp move_ctor.cpp
 */
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////clazz 
+///////////////////////////BEGIN clazz 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //If not defined in another file (and referenced like "#include "blah.h"), then this must be declared above the main function
@@ -34,8 +28,6 @@ class clazz{
 	private:
 		int priv0;
 		string priv1 {"initial value"};
-		const static int constStaticPriv {2}; 
-		static int staticPriv; //C++ forbids in-class initialization of non-const static members
 	public:
 		clazz (int p0, string p1);
 		clazz ();
@@ -49,12 +41,8 @@ class clazz{
 		//clazz (int p0 = 0, string p1 = "a");
 		*/
 		//But better to implement them outside the class (instead we'll just declare them), along with other methods, like this one:
-		int getPriv0() /*const*/; 
+		int getPriv0(); 
 		void setPriv0(int p0);
-
-		static int staticPublic;
-		int nonStaticPublic;
-		static int getStaticPriv();
 
 		//Destructor
 		~clazz();//{ };
@@ -66,25 +54,12 @@ clazz::clazz (int p0, string p1) : priv0 {p0}, priv1 {p1} {cout << "Constructor 
 //Delegating constructor
 clazz::clazz () : clazz{0, "default"} { cout << "Default constructor, no parameters, delegating to constructor with params. (The constructor this is delegated to does its stuff before this is printed.)\n";} 
 
-//initialize static data
-int clazz::staticPriv = 1;
-
 int clazz::getPriv0() {
-	//TODO - test __func__ predefined identifier
-	cout << __func__ << " called by " << priv1 << endl;
 	return priv0;
-	//TODO: does this work as well?
-	//return this->priv0;
 }
 
-void clazz::setPriv0(int priv0){
-	this->priv0 = priv0;
-	//must use 'this' here because otherwise it's ambiguous and scope rules say that the parameter would just assign the value to itself
-}
-
-/*static*/ int clazz::getStaticPriv(){
-	return staticPriv;
-	//Called like this: cout << clazz::getStaticPriv();
+void clazz::setPriv0(int p0){
+	priv0 = p0;
 }
 
 //Destructor
@@ -94,21 +69,67 @@ clazz::~clazz(){
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////END clazz
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////struct
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-struct struckd { //members are public by default (members of classes are private by default)
-	int i;
-	int get_i() { return i;}
-/*
-Use struct for passive objects with public access
-Don't declare methods in struct (why? is private not possible in struct? or are structs inefficient?)
-Use class for active objects with private access
+///////////////////////////BEGIN shallow_without_pointer
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-*/
+class shallow_without_pointer{
+	private:
+		int priv0; 								//<-not a pointer
+		string priv1 {"shallow_without_pointer initial value"};
+	public:
+		//Standard constructor declarations
+		shallow_without_pointer (int p0, string p1);
+		shallow_without_pointer ();
+
+		int getPriv0();
+		void setPriv1(string p1);
+
+		//Copy constructor
+		shallow_without_pointer (const shallow_without_pointer &source);
+
+		//Destructor
+		~shallow_without_pointer();
 };
+
+shallow_without_pointer::shallow_without_pointer (){
+	cout << "Shallow_without_pointer contructor with no params. Leaving privates with their default values." << endl;
+}
+
+shallow_without_pointer::shallow_without_pointer (int p0, string p1){
+	priv0 =  p0;
+	priv1 = p1;
+	cout << "Shallow_without_pointer contructor with 2 params." << endl;
+}
+
+//Copy constructor
+shallow_without_pointer::shallow_without_pointer (const shallow_without_pointer &source)
+: priv0 {source.priv0}, priv1 {source.priv1 + " copied"} { 
+	cout << "Copy constructor of shallow_without_pointer " << source.priv1 << endl;
+}
+
+/*
+Shallow copy: 
+- memberwise copy
+- each data member is copied from the source object
+- pointer is copied, NOT what it points to
+	problem: when we release the storage in the destructor, the other object still refers to the released storage
+		best case scenario: this is discovered when the program crashes in the development stage
+*/
+
+int shallow_without_pointer::getPriv0() {
+	cout << "getPriv0 called by " << priv1 << endl;
+	return priv0;
+}
+
+//Destructor
+shallow_without_pointer::~shallow_without_pointer(){
+	cout << "shallow_without_pointer destructor of " << priv1 << "\n"; 
+}
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////END struct
+///////////////////////////END shallow_without_pointer
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 //Declaring locally defined method that will use a shallow_without_pointer object, passed in by value, 
 //but should not cause a blow up
@@ -119,8 +140,12 @@ void shallow_vs_deep();
 
 void non_clazz_method(clazz c);
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////BEGIN main
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 int main()
 {
+/**/
 	move_ctor m{};
 	int x {100};
 	m.func_0(x); //this is fine: x is an l-value
@@ -132,6 +157,7 @@ int main()
 	//overloaded method
 	m.func_2(x); 
 	m.func_2(200);
+/**/
 
 	vector<move_ctor> vec {};
 	//pushing unnamed temporary objects, i.e., r-values; compiler will use the copy constructor to make them
@@ -140,22 +166,14 @@ int main()
 	}
 	//Note: vector makes copies of the objects behind the scenes as well as it grows
 	//Does this also call the destructor now or later?
-	cout << "move_ctor destructor called yet?" << endl;
+	//cout << "move_ctor destructor called yet?" << endl; //no, not yet
 
-	//Next, testing const stuff
-	const clazz c0;
-
-	//do all of these fail?
-	c0.setPriv0(0);
-	c0.getPriv0();
-
-	struckd s;
-	cout << "s.i: " << s.i << endl;
-	cout << "s.get_i(): " << s.get_i() << endl;
-	
-
+	cout << "Done. Automatically calling destructors now" << endl;
 	return 0;
 }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////END main
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void display_shallow_without_pointer(shallow_without_pointer swop){
 	cout << "swop.getPriv0() called from method declared and implemented outside the swop class: ";
@@ -213,7 +231,7 @@ void shallow_vs_deep(){
 	cout << "Still alive after calling getPriv0 from s2?" << endl;
 //	If this is not included in the default constructor, then No: segmentation fault:
 //priv0 = new int; //allocate storage
-//If the ^ is included in the default constructor, then it won't fail here, but will fail when 
+//If this ^ is included in the default constructor, then it won't fail here, but will fail later (when destructor is called?) 
 	/**/
 	
 	//shallow_without_pointer
