@@ -6,15 +6,12 @@ using namespace std;
 /*
 	private:
 		int priv0;
-		string priv1 {"initial value"};
+		string name {"initial value"};
 */
 
-f0::f0 (){
-	priv0 = 1;
-	cout << "F0 contructor with no params" << endl;
-}
+/*static*/ int f0::static_num {1}; //TODO: can this be modified by the friend class f1?
 
-int f0::getPriv0() {
-	cout << __func__ << " called by " << priv1 << endl;
-	return priv0;
+f0::f0 (){
+	priv0 = static_num + 1;
+	cout << "F0 contructor with no params" << endl;
 }
