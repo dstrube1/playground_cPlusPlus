@@ -95,11 +95,17 @@ Mystring::Mystring( Mystring &&source)
 
 Mystring::~Mystring(){
 	//Must deallocate memory that's been allocated
-	if (get_length() == 0){
+	if (/*str == nullptr or */get_length() == 0){
 		cout << "destructing [empty]" << endl;
 	}else{
 		cout << "destructing " << str << endl;
 	}
+	
+	//Lesson learned: be careful calling get_length() or str here.
+	//After move assignment, str of source is null
+	//Solution 1: test first for str == nullptr before get_length() == 0
+	//Solution 2: (better): add nullptr check to get_length()
+	
 	delete [] str;
 }
 
@@ -113,6 +119,8 @@ void Mystring::display() const{
 }
 
 int Mystring::get_length() const{
+	if (str == nullptr) return 0;
+	
 	return strlen(str);
 }
 
@@ -211,9 +219,10 @@ int main()
 	//./main.o
 	
 	//Maybe because we have no move constructor?...
+	//No, the cause / solution was in the destructor
 	
-	//Mystring s3;
-	//s3 = Mystring{"Blah"};
+	Mystring s3;
+	s3 = Mystring{"Blah"};
 
 	
 	cout << "Done\n";
