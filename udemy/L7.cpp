@@ -134,6 +134,8 @@ const char Mystring::*get_str() const{
 Mystring &Mystring::operator=(const Mystring &rhs){
 	//rhs: right-hand-side object
 	
+	cout << "Assignment operator overloading - copy\n";
+
 	//Check for self assignment
 	if (this == &rhs) return *this;
 	
@@ -211,7 +213,7 @@ int main()
 	cout << "Testing move assignment...\n";
 	Mystring s2;
 	s2 = "Frank";
-	//Getting error here^:
+	//Was getting an error here^:
 	//zsh: segmentation fault  ./L7.o
 	//But no error when compiling running this:
 	//cd /Users/dstrube/Downloads/Section14/Mystring-move-assignment
@@ -223,6 +225,8 @@ int main()
 	
 	Mystring s3;
 	s3 = Mystring{"Blah"};
+
+	//TODO: Other examples of overloading...
 
 	
 	cout << "Done\n";
