@@ -53,6 +53,8 @@ class Mystring{
 	//Type &operator=(const Type rhs);
 		Mystring &operator=(const Mystring &rhs);
 		Mystring &operator=(Mystring &&rhs);
+	//Wacky overloading:
+		Mystring operator-() const;
 };
 
 
@@ -67,7 +69,7 @@ Mystring::Mystring()
 
 Mystring::Mystring(const char *s) 
 	: str {nullptr} {
-	cout << "single param constructor... ";
+	cout << "single param Mystring constructor... ";
 	if (s == nullptr) {
 		str = new char[1];
 		*str = '\0';
@@ -170,8 +172,124 @@ Mystring &Mystring::operator=(Mystring &&rhs){
 	return *this;
 }
 
+Mystring Mystring::operator-() const{
+	//lesson 162 @2:20
+	//Not optimized, but drawn out to be clear
+	//TODO - test this
+	char *buff = new char[strlen(str) + 1];
+	strcpy(buff, str);
+	for (size_t i = 0; i < strlen(buff); i++){
+		buff[i] = tolower(buff[i]);
+	}
+	Mystring temp {buff};
+	delete [] buff;
+	return temp;
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////END Mystring
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////BEGIN Number
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+class Number{
+	private:
+		int i;
+	public:
+		Number();
+		Number(const int i0);
+		//Mystring(const Mystring &source);
+		//Mystring( Mystring &&source);
+		~Number();
+		//void display() const;
+		int get() const;
+	//Unary operator overloading:
+		Number operator-() const;
+		Number &operator++();
+		Number &operator++(int i0);
+		bool operator!() const;
+	//Binary operator overloading:
+		Number operator+(const Number &rhs) const;
+		Number operator-(const Number &rhs) const;
+		bool operator==(const Number &rhs) const;
+		bool operator<(const Number &rhs) const;
+};
+
+
+Number::Number() 
+	: i{0} {
+	cout << "default Number constructor" << endl;
+}
+
+Number::Number(const int i0) 
+	: i {0} {
+	cout << "single param Number constructor... ";
+	i = i0;
+}
+
+Number::~Number(){
+	cout << "Number destructor: " << i << "\n";
+}
+
+
+int Number::get() const{	
+	return i;
+}
+
+//Unary operator overloading: - (negation)
+Number Number::operator-() const {
+	cout << "Unary operator overloading: - (negation)\n";
+	Number n{i};
+	n.i = -n.i;
+	return n;
+}
+
+//Unary operator overloading: ++ (pre-increment)
+Number &Number::operator++(){
+	cout << "Unary operator overloading: ++ (pre-increment)\n";
+	i = i + 1;
+	return *this;
+}
+
+//Unary operator overloading: ++(int) (post-increment)
+Number &Number::operator++(int i0){
+	cout << "Unary operator overloading: ++(int) (post-increment)\n";
+	//TODO
+	return *this;
+}
+
+bool Number::operator!() const {
+	cout << "Unary operator overloading: !\n";
+
+	//TODO
+	return true;
+}
+
+//Binary operator overloading:
+Number operator+(const Number &rhs) const{
+	//rhs = right hand side operand
+	//this = left side operand
+	Number n{i};
+	n.i = -n.i;
+	return n;	
+}
+Number operator-(const Number &rhs) const{
+	//TODO
+	return nullptr;
+}
+bool operator==(const Number &rhs) const{
+	//TODO
+	return true;
+}
+bool operator<(const Number &rhs) const{
+	//TODO
+	return true;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////END Number
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -226,8 +344,14 @@ int main()
 	Mystring s3;
 	s3 = Mystring{"Blah"};
 
-	//TODO: Other examples of overloading...
-
+	//Other examples of overloading...
+	Number n1{100};
+	Number n2 = -n1; 	//n1.operator-()
+	n2 = ++n1; 			//n1.operator++()
+	n2 = n1++;			 //n1.operator++(int)
+	Number n3 = n1 + n2;
+	n3 = n1 - n2;
+	if (n1 == n2){}
 	
 	cout << "Done\n";
 	
