@@ -32,6 +32,10 @@ These operators cannot be overloaded:
 . (dot)
 sizeof
 
+To make a global operator overload function (ie, not member operator overload function), 
+you may* have to declare the implementing class a friend of the class that is being 
+affected by the overload. (See lesson 163 for details and example.) This seems a bit limited / contrived to me.
+*: If not, then how?
 */
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -47,14 +51,19 @@ class Mystring{
 		Mystring( Mystring &&source);
 		~Mystring();
 		void display() const;
+		char* get() const;
 		int get_length() const;
 		const char *get_str() const {return str;}
 	//assignment operator overloading syntax:
 	//Type &operator=(const Type rhs);
 		Mystring &operator=(const Mystring &rhs);
 		Mystring &operator=(Mystring &&rhs);
-	//Wacky overloading:
+	//Unary operator overloading:
 		Mystring operator-() const;
+		Mystring operator+() const;
+	//Binary operator overloading:
+		bool operator==(const Mystring &rhs) const;
+		Mystring operator+(Mystring &rhs) const;
 };
 
 
@@ -120,6 +129,8 @@ void Mystring::display() const{
 	cout << get_length() << endl;
 }
 
+char* Mystring::get() const { return str; }
+
 int Mystring::get_length() const{
 	if (str == nullptr) return 0;
 	
@@ -175,13 +186,43 @@ Mystring &Mystring::operator=(Mystring &&rhs){
 Mystring Mystring::operator-() const{
 	//lesson 162 @2:20
 	//Not optimized, but drawn out to be clear
-	//TODO - test this
+	cout << "Mystring unary - operator: negation -> lower case\n";
 	char *buff = new char[strlen(str) + 1];
 	strcpy(buff, str);
 	for (size_t i = 0; i < strlen(buff); i++){
 		buff[i] = tolower(buff[i]);
 	}
 	Mystring temp {buff};
+	delete [] buff;
+	return temp;
+}
+
+Mystring Mystring::operator+() const{
+	//Trying my own thing
+	cout << "Mystring unary - operator: plus -> upper case\n";
+	char *buff = new char[strlen(str) + 1];
+	strcpy(buff, str);
+	for (size_t i = 0; i < strlen(buff); i++){
+		buff[i] = toupper(buff[i]);
+	}
+	Mystring temp {buff};
+	delete [] buff;
+	return temp;
+}
+
+bool Mystring::operator==(const Mystring &rhs) const{
+	cout << "Mystring binary == operator: equality\n";
+	if (strcmp(str, rhs.str) == 0) return true;
+	return false;
+}
+
+Mystring Mystring::operator+(Mystring &rhs) const {
+	cout << "Mystring binary + operator: concatenation\n";
+	size_t buff_size = strlen(str) + strlen(rhs.str) + 1;
+	char *buff = new char[buff_size];
+	strcpy(buff, str);
+	strcat(buff, rhs.str);
+	Mystring temp{buff};
 	delete [] buff;
 	return temp;
 }
@@ -199,16 +240,13 @@ class Number{
 	public:
 		Number();
 		Number(const int i0);
-		//Mystring(const Mystring &source);
-		//Mystring( Mystring &&source);
 		~Number();
-		//void display() const;
 		int get() const;
 	//Unary operator overloading:
 		Number operator-() const;
 		Number &operator++();
-		Number &operator++(int i0);
-		bool operator!() const;
+		//TODO Number &operator++(int i0);
+		//TODO bool operator!() const;
 	//Binary operator overloading:
 		Number operator+(const Number &rhs) const;
 		Number operator-(const Number &rhs) const;
@@ -224,7 +262,7 @@ Number::Number()
 
 Number::Number(const int i0) 
 	: i {0} {
-	cout << "single param Number constructor... ";
+	cout << "single param Number constructor...\n";
 	i = i0;
 }
 
@@ -253,38 +291,44 @@ Number &Number::operator++(){
 }
 
 //Unary operator overloading: ++(int) (post-increment)
-Number &Number::operator++(int i0){
+/*Number &Number::operator++(int i0){
 	cout << "Unary operator overloading: ++(int) (post-increment)\n";
 	//TODO
 	return *this;
-}
+}*/
 
-bool Number::operator!() const {
+/*bool Number::operator!() const {
 	cout << "Unary operator overloading: !\n";
 
 	//TODO
 	return true;
-}
+}*/
 
 //Binary operator overloading:
-Number operator+(const Number &rhs) const{
+Number Number::operator+(const Number &rhs) const{
 	//rhs = right hand side operand
 	//this = left side operand
+	cout << "Binary operator overloading: +\n";
 	Number n{i};
-	n.i = -n.i;
+	n.i += rhs.i;
 	return n;	
 }
-Number operator-(const Number &rhs) const{
-	//TODO
-	return nullptr;
+
+Number Number::operator-(const Number &rhs) const{
+	cout << "Binary operator overloading: -\n";
+	Number n{i};
+	n.i -= rhs.i;
+	return n;	
 }
-bool operator==(const Number &rhs) const{
-	//TODO
-	return true;
+
+bool Number::operator==(const Number &rhs) const{
+	cout << "Binary operator overloading: ==\n";
+	return i == rhs.i;
 }
-bool operator<(const Number &rhs) const{
-	//TODO
-	return true;
+
+bool Number::operator<(const Number &rhs) const{
+	cout << "Binary operator overloading: <\n";
+	return i < rhs.i;
 }
 
 
@@ -307,19 +351,22 @@ int main()
 	Mystring copy {original};
 	//->		Mystring(const Mystring &source);
 	
+	cout << "empty.display(): ";
 	empty.display();
+	cout << "original.display(): ";
 	original.display();
+	cout << "copy.display(): ";
 	copy.display();
 	
 	//also not assignment; same as Mystring s1 {copy}
 	Mystring s1 = copy;
-	
+	cout << "s1.display(): ";
 	s1.display();
 	
 	//this is assignment:
 	cout << "Testing copy assignment...\n";
 	s1 = original;
-	
+	cout << "s1.display(): ";
 	s1.display();
 	
 	//Before overloading the assignment operator:
@@ -343,19 +390,48 @@ int main()
 	
 	Mystring s3;
 	s3 = Mystring{"Blah"};
-
+	
+	if (s1 == original) cout << "s1 == original\n";
+	else cout << "s1 (" << s1.get() << ") != original (" << original.get() << ")\n";
+	
+	s3 = +s3;
+	cout << "s3.display(): ";
+	s3.display();
+	
+	s3 = -s3;
+	cout << "s3.display(): ";
+	s3.display();
+	
+	s3 = s1 + s2;
+	cout << "s3.display(): ";
+	s3.display();
+	
+	
+/**/
 	//Other examples of overloading...
+	/**/
 	Number n1{100};
 	Number n2 = -n1; 	//n1.operator-()
+	cout << "n1: " << n1.get() << "; n2: " << n2.get() << endl;
 	n2 = ++n1; 			//n1.operator++()
-	n2 = n1++;			 //n1.operator++(int)
+	cout << "n2 (++n1): " << n2.get() << "; n1: " << n1.get() << endl;
+	//TODO n2 = n1++;			 //n1.operator++(int)
 	Number n3 = n1 + n2;
+	cout << "n3 (n1 + n2): " << n3.get() << endl;
 	n3 = n1 - n2;
-	if (n1 == n2){}
+	cout << "n3 (n1 - n2): " << n3.get() << endl;
+	if (n1 == n2){
+		cout << "n1 == n2" << endl;
+	}
+	
+	if (n3 < n1){
+		cout << "n3 < n1" << endl;
+	}
+	/**/
 	
 	cout << "Done\n";
 	
-	return empty.get_length();
+	return 0;// empty.get_length();
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
