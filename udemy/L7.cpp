@@ -340,6 +340,9 @@ bool Number::operator<(const Number &rhs) const{
 ///////////////////////////BEGIN main
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+//trying to overload an operator with a global function
+bool operator>(const Number &lhs, const Number &rhs);
+
 int main()
 {
 /**/
@@ -427,11 +430,23 @@ int main()
 	if (n3 < n1){
 		cout << "n3 < n1" << endl;
 	}
+	if (n1 > n3){
+		cout << "n1 > n3" << endl;
+	}
 	/**/
 	
 	cout << "Done\n";
 	
 	return 0;// empty.get_length();
+}
+
+bool operator>(const Number &lhs, const Number &rhs){
+	cout << "Binary operator overloading with a global function: >\n";
+	//return lhs.i > rhs.i;
+	//Can't access the private member of either lhs or rhs
+	//Puzzle: how to declare main as a friend of Number?
+	//Workaround: use getter of each
+	return lhs.get() > rhs.get();
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
