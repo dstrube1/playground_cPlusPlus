@@ -42,6 +42,9 @@ affected by the overload. (See lesson 163 for details and example.) This seems a
 ///////////////////////////BEGIN Mystring
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class Mystring{
+	//Overloading the extraction operator(>>)
+	friend istream &operator>>(istream &is, Mystring &obj);
+
 	private:
 		char *str; //C-style string
 	public:
@@ -235,6 +238,12 @@ Mystring Mystring::operator+(Mystring &rhs) const {
 ///////////////////////////BEGIN Number
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class Number{
+	friend bool operator >=(const Number &lhs, const Number &rhs) /*can't have const in a friend method*/;
+
+	//Overloading the insertion operator(<<)
+	friend ostream &operator<<(ostream &os, const Number &obj);
+	//trying this as a non-friend didn't work as well
+
 	private:
 		int i;
 	public:
@@ -290,7 +299,7 @@ Number &Number::operator++(){
 	return *this;
 }
 
-//Unary operator overloading: ++(int) (post-increment)
+//TODO Unary operator overloading: ++(int) (post-increment)
 /*Number &Number::operator++(int i0){
 	cout << "Unary operator overloading: ++(int) (post-increment)\n";
 	//TODO
@@ -433,6 +442,18 @@ int main()
 	if (n1 > n3){
 		cout << "n1 > n3" << endl;
 	}
+	if (n1 >= n3){
+		cout << "n1 >= n3" << endl;
+	}
+	
+	cout << "n1 = " << n1 << endl;
+	
+	Mystring x;
+	cout << "Now input a Mystring: ";
+	cin >> x;
+	cout << "You inputted; ";
+	x.display();
+	
 	/**/
 	
 	cout << "Done\n";
@@ -443,12 +464,39 @@ int main()
 bool operator>(const Number &lhs, const Number &rhs){
 	cout << "Binary operator overloading with a global function: >\n";
 	//return lhs.i > rhs.i;
-	//Can't access the private member of either lhs or rhs
+	//This function can't access the private member of either lhs or rhs
 	//Puzzle: how to declare main as a friend of Number?
 	//Workaround: use getter of each
 	return lhs.get() > rhs.get();
 }
 
+//let's try this with friendship
+bool operator >=(const Number &lhs, const Number &rhs){
+	//according to Lesson 163 at about 7:00, it's common practice to put the implementation 
+	//of this in the implementation of the class (Number.cpp)
+	cout << "Binary operator overloading with a global function using friendship: >\n";
+	return lhs.i >= rhs.i;
+}
+
+ostream &operator<<(ostream &os, const Number &obj){
+	cout << "\n(Overloading insertion (<<)...)\n";
+	os << obj.i; //if friend function
+
+	//if not friend - doesn't work as well as the friend way:
+	//os << obj.get();
+	
+	//Don't return ostream by value
+	return os;
+}
+
+//Doing this for Mystring instead, because it's more complicated and interesting
+istream &operator>>(istream &is, Mystring &obj){
+	char *buff = new char[1000];
+	is >> buff;
+	obj = Mystring{buff}; //if copy or move assignment is available
+	delete [] buff;
+	return is;
+}
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////END main
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
