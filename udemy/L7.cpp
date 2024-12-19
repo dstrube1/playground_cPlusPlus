@@ -59,16 +59,19 @@ class Mystring{
 		const char *get_str() const {return str;}
 	//assignment operator overloading syntax:
 	//Type &operator=(const Type rhs);
+		//copy assignment
 		Mystring &operator=(const Mystring &rhs);
+		//move assignment
 		Mystring &operator=(Mystring &&rhs);
-	//Unary operator overloading:
+		//Note, assignment operator must be overloaded as a member function, cannot be friend / nonmember
+	//Unary operator overloading (no parameter, unless is friend, in which 1 param):
 		Mystring operator-() const;
 		Mystring operator+() const;
-	//Binary operator overloading:
+	//Binary operator overloading (one parameter, unless is friend, in which 2 params):
 		bool operator==(const Mystring &rhs) const;
 		Mystring operator+(Mystring &rhs) const;
+		Mystring &operator+=(Mystring &rhs);
 };
-
 
 Mystring::Mystring() 
 	: str{nullptr} {
@@ -230,6 +233,20 @@ Mystring Mystring::operator+(Mystring &rhs) const {
 	return temp;
 }
 
+Mystring &Mystring::operator+=(Mystring &rhs){
+	cout << "Assignment operator overloading: +=\n";
+	strcat(str, rhs.str);
+	rhs.str = nullptr;
+	return *this;
+	/*
+	alternate implementation:
+	*this = *this + rhs; //calls overloaded concatenate operator
+	return *this;
+	OR maybe this?:
+	return *this + rhs;
+	*/
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////END Mystring
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -253,16 +270,15 @@ class Number{
 		int get() const;
 	//Unary operator overloading:
 		Number operator-() const;
-		Number &operator++();
-		//TODO Number &operator++(int i0);
-		//TODO bool operator!() const;
+		Number &operator++(); //++i : returns reference
+		Number operator++(int /*i0*/); //i++ : returns by value
+		//Note that ^this^ is an exception to unary operator overloading taking no parameter
 	//Binary operator overloading:
 		Number operator+(const Number &rhs) const;
 		Number operator-(const Number &rhs) const;
 		bool operator==(const Number &rhs) const;
 		bool operator<(const Number &rhs) const;
 };
-
 
 Number::Number() 
 	: i{0} {
@@ -299,12 +315,18 @@ Number &Number::operator++(){
 	return *this;
 }
 
-//TODO Unary operator overloading: ++(int) (post-increment)
-/*Number &Number::operator++(int i0){
+//Unary operator overloading: ++(int) (post-increment)
+Number Number::operator++(int /*i0*/){ //note, parameter doesn't need to be named, just specified
 	cout << "Unary operator overloading: ++(int) (post-increment)\n";
-	//TODO
-	return *this;
-}*/
+	Number n{*this}; //make a copy
+	//i += 1; //or, 
+	//i++; //or, even cooler:
+	operator++(); //pre-increment the original value, which doesn't get returned
+	//note, if implementing this as a friend / nonmember function, first param will be 
+	//Number &obj, and at this point, calling pre-increment would be done like this:
+	//++obj;
+	return n; //return the old copy
+}
 
 /*bool Number::operator!() const {
 	cout << "Unary operator overloading: !\n";
@@ -427,7 +449,8 @@ int main()
 	cout << "n1: " << n1.get() << "; n2: " << n2.get() << endl;
 	n2 = ++n1; 			//n1.operator++()
 	cout << "n2 (++n1): " << n2.get() << "; n1: " << n1.get() << endl;
-	//TODO n2 = n1++;			 //n1.operator++(int)
+	n2 = n1++;			 //n1.operator++(int)
+	cout << "n2 (n1++): " << n2.get() << "; n1: " << n1.get() << endl;
 	Number n3 = n1 + n2;
 	cout << "n3 (n1 + n2): " << n3.get() << endl;
 	n3 = n1 - n2;
@@ -448,10 +471,14 @@ int main()
 	
 	cout << "n1 = " << n1 << endl;
 	
-	Mystring x;
+	Mystring x{"123"};
+	Mystring y{"456"};
+	/*
 	cout << "Now input a Mystring: ";
 	cin >> x;
 	cout << "You inputted; ";
+	*/
+	x += y;
 	x.display();
 	
 	/**/
