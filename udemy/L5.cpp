@@ -112,6 +112,67 @@ int main()
   return 0;
 }
 
+void more_testing(){
+//TODO: test all this
+	int days {10};
+	int *int_ptr;
+	cout << "int_ptr declared without initialization: " << int_ptr << endl;
+	int_ptr = nullptr; //can't do this after the declaration line: int_ptr {nullptr};
+	cout << "int_ptr initialized / assigned to nullptr: " << int_ptr << endl;
+	int_ptr = &days;
+	cout << "int_ptr assigned address of a variable: " << int_ptr << endl;
+	cout << "address of a variable: " << &days << endl;
+	cout << "address of a variable?: " << & days << endl;
+
+	//reset, use new to allocate storage - ie dynamic memory allocation
+	int_ptr = nullptr;
+	int_ptr = new int;
+	cout << "int_ptr reset and using new to allocate storage - address: " << int_ptr << endl;
+	cout << "int_ptr value, i.e. dereferenced: " << *int_ptr << endl;
+	*int_ptr = 100;
+	cout << "int_ptr value (i.e. target) set to new value: " << *int_ptr << endl;
+	//the int that this pointer points to is unnamed, so losing this pointer for some reason (like going out of scope or assigning to nullptr before delete) = memory leak
+	//free the allocated storage like so:
+	delete int_ptr;
+	cout << "What if I try to print the int_ptr address or value after deleting it?: " << int_ptr << endl; // same address
+	cout << *int_ptr << endl; // different value
+
+	int *array_ptr {nullptr};
+	int size {};
+	cout << "How big do you want the array?: "; //what if user inputs something that isn't an int?
+	cin >> size;
+	array_ptr = new int[size];
+
+	//when done:
+	delete [] array_ptr;
+	cout << "What if I try to print the array pointer address or value after deleting it?: " << array_ptr << endl; // same address; interestingly, same as above for int_ptr
+	cout << *array_ptr << endl; // different value; interestingly, same as above for int_ptr
+
+	//let's do a bad thing
+	double *dbl_ptr {nullptr}; //pointer to an array of doubles
+	while(true){
+		dbl_ptr = new double[1'000'000]; //1 Mb
+	} //in Udemy this fails with a bad_alloc error message; in Rocky Linux command line, just says "Killed" 
+	//(If my VM is running at the same time, then the above can also disrupt that.)
+	//I wonder what it does in Mac...
+
+	int arr[] {1,2,3,-1}; //-1 is the stopping value I decided
+	cout << "address of arr: " << arr << "; first element: " << *arr << endl;
+	//initialize int pointer with the array = this is a pointer to the array
+	int *arr_ptr {arr};
+	cout << "address of arr using pointer: " << arr_ptr << "; first element using dereferenced pointer: " << *arr_ptr << endl;
+	//we can use array subscripting on a pointer:
+	cout << "2nd element: " << arr[1] << "; 3rd element using pointer: " << arr_ptr[2] << endl;
+	//using pointer arithmetic
+	cout << "2nd element using pointer arithmetic: " << *(arr_ptr + 1) << endl;
+	//this also works with just the array
+	cout << "3rd element using pointer arithmetic on just the array: " << *(arr + 2) << endl;
+	cout << "Looping thru the array using a dereferenced and incremented pointer:\n";
+	while(*arr_ptr != -1)
+		cout << *arr_ptr++ << " "; //dereference, and then print / increment 
+	cout << endl;
+}
+
 
 void pass_by_ref(int &num){
 	num++;
