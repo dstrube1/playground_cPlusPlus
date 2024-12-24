@@ -10,10 +10,14 @@ using namespace std;
 
 /*
 # To compile:
-g++ -std=c++11 -o L5.o L5.cpp
+g++ -std=c++14 -o L5.o L5.cpp
+
 # without -o, outputs to default a.out
-# without -std=c++11, get warnings about use of auto; also error from the nullptr part of this:
+
+# Before adding more_testing(): without -std=c++11, get warnings about use of auto; also error from the nullptr part of this:
 # int *new_arr {nullptr};
+
+# After adding more_testing(): without -std=c++14, error from tick marks
 
 # To run:
 ./L5.o
@@ -25,11 +29,12 @@ void pass_vec_by_ref(const vector<int> &v);
 int *largest(int *ptr1, int *ptr2);
 int *make_array(size_t size, int initial_value = 0); //default parameter
 void double_target(int *ptr);
+void more_testing();
 
 int main()
 {
 	//Pointers and references
-	/**/
+	/**
 	int h = 10;
 	int *h_ptr = &h; //&: address; *: declare pointer
 	//interesting, when compiling on Mac, this gives a compiler error, unless std=c++11:
@@ -107,6 +112,7 @@ int main()
  
  /**/
 
+	more_testing();
 	
   cout << "Done\n";
   return 0;
