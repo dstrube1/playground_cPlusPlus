@@ -8,3 +8,6 @@ inh0::inh0 (){
 	cout << "inh0 contructor with no params" << endl;
 }
 
+string inh0::getName(){
+	return name;
+}
