@@ -8,7 +8,7 @@ inh0::inh0 (): name {"inh0"}, protectedString {"protectedString-inh0"} {
 }
 
 inh0::inh0(string s) : name{s}, protectedString {"protectedString-inh0"}  {
-	cout << "inh0 contructor with 1 param" << endl;
+	cout << "inh0 contructor with 1 param: " << s << endl;
 }
 
 string inh0::getName(){
