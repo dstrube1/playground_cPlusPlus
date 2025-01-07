@@ -31,6 +31,46 @@ class inh1: /*access specifier:*/ /**/public/**/ /** /protected/ **/ /** /privat
 		~inh1();
 		//When a class derives from a parent, constructor / destructor order is this:
 		// Base constructor, derived constructor, derived destructor, base destructor
+/*
+inh: see also https://gbg.udemy.com/course/beginning-c-plus-plus-programming/learn/lecture/9535664#overview
+176. Copy/Move Constructors and Operator = with Derived Classes
+
+redefine method from base class:
+inh1::getName(){
+	cout << "inh1's getName calls inh0's getName\n";
+	return inh0::getName();
+}
+
+also: 
+//static binding example
+inh0 *inh0_ptr = new inh1();
+inh0_ptr->getName(); //TODO: Confirm: calls inh0 getName, not inh1 ?
+delete *inh0_ptr;
+
+also:
+overloaded functions and overloaded operators are compile-time polymorphism (aka, early-binding polymorphism and static binding polymorphism), as opposed to run-time polymorphism
+run-time polymorphism requires inheritance
+try this, in main:
+void call_from_reference(inh0 &i0){
+	i0.getProtectedString();
+}
+implement getProtectedString() in ih1, then :
+inh0 i0 = new inh1();
+i0.getProtectedString();
+and 
+inh1 i1 = new inh1();
+i1.getProtectedString();
+see what happens
+
+then make new method in inh0: public virtual void test();
+and declared and implemented in inh1: public void test();
+
+smart pointer:
+std::unique_ptr<inh0> ptr = std::make_unique<inh1>();
+ptr->test();
+//don't have to delete smart pointers
+
+*/
 };
 
 #endif //__INH1_H__
