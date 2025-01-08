@@ -10,7 +10,7 @@ inh1::inh1 ()
 }
 
 inh1::inh1 (string s) 
-: inh0{s}, protectedString{s}, i {0}, protectedString{"fails to compile?"}, protectedInt {1} 
+: inh0{s}, protectedString{s}, i {0}, protectedInt {1} 
 { //Note, name was declared as private in inh0, not inh1; so name is not accessible here, 
 //except as passed along to base constructor
 	//Note also, it seems that the s must both be passed to the base constructor AND to inh1's protectedString member
@@ -18,7 +18,8 @@ inh1::inh1 (string s)
 }
 
 void inh1::display(){
-	cout << "" << endl;
+	cout << "protectedString: " << protectedString;
+	cout << "; protectedInt: " << protectedInt << "; i: " << i << endl;
 }
 
 inh1::~inh1 (){
