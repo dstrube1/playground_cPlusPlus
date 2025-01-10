@@ -41,7 +41,7 @@ int main()
 	int *h_ptr0 {&h};
 	cout << "value of h: " << h << endl;
 	cout << "address of h: " << &h << endl;
-	cout << "value of h (from h_ptr): " << *h_ptr << endl; //*: dereference pointer
+	cout << "value of h (from h_ptr): " << *h_ptr << endl; // *: dereference pointer
 	cout << "address of h (from h_ptr): " << h_ptr << endl;
 	(*h_ptr)++;
 	cout << "h after (*h_ptr)++ (must use parentheses) : " << h << endl;
@@ -65,7 +65,7 @@ int main()
 
 	//pointer to a constant: cannot change the value of the thing pointed to, but can change what the pointer points to
 	const int *ptr3 {&i1};
-	//*ptr3 = 3; //compiler error
+	// *ptr3 = 3; //compiler error
 	ptr3 = &i2; //OK
 	//const pointer:
 	int *const ptr4 {&i1};
@@ -74,7 +74,7 @@ int main()
 	//const pointer to a constant:
 	const int *const ptr5 {&i1};
 	//ptr5 = &i2; //compiler error
-	//*ptr5 = 3; //compiler error
+	// *ptr5 = 3; //compiler error
 	
 	cout << "Before doubling with double_target(int *ptr): " << i1 << endl;
 	double_target(&i1); // pass in the address of the target, i.e. pass by reference
@@ -110,7 +110,7 @@ int main()
 	//int &ref = 100; //compiler error: cannot bind non-const lvalue reference of type ‘int&’ to an rvalue of type ‘int’
 	//same if function f is expecting a reference- cannot pass in an r-value
  
- /**/
+ / **/
 
 	more_testing();
 	
@@ -119,16 +119,15 @@ int main()
 }
 
 void more_testing(){
-//TODO: test all this
 	int days {10};
 	int *int_ptr;
 	cout << "int_ptr declared without initialization: " << int_ptr << endl;
 	int_ptr = nullptr; //can't do this after the declaration line: int_ptr {nullptr};
 	cout << "int_ptr initialized / assigned to nullptr: " << int_ptr << endl;
 	int_ptr = &days;
-	cout << "int_ptr assigned address of a variable: " << int_ptr << endl;
-	cout << "address of a variable: " << &days << endl;
-	cout << "address of a variable?: " << & days << endl;
+	cout << "int_ptr assigned address of a variable (int days {10}): " << int_ptr << endl;
+	cout << "address of a variable days (&days): " << &days << endl;
+	cout << "address of a variable days (& days)?: " << & days << endl;
 
 	//reset, use new to allocate storage - ie dynamic memory allocation
 	int_ptr = nullptr;
@@ -140,27 +139,42 @@ void more_testing(){
 	//the int that this pointer points to is unnamed, so losing this pointer for some reason (like going out of scope or assigning to nullptr before delete) = memory leak
 	//free the allocated storage like so:
 	delete int_ptr;
-	cout << "What if I try to print the int_ptr address or value after deleting it?: " << int_ptr << endl; // same address
-	cout << *int_ptr << endl; // different value
+	cout << "What if I try to print the int_ptr address or value after deleting it?: " << int_ptr; // same address
+	cout << " - Same address" << endl;
+	cout << "And printing *int_ptr: " << *int_ptr; // different value
+	cout << " - Different value" << endl;
 
 	int *array_ptr {nullptr};
 	int size {};
 	cout << "How big do you want the array?: "; //what if user inputs something that isn't an int?
-	cin >> size;
+	cout << "\nIf 'cin >> size;' is commented out, then we'll use the default value of size which is " << size << endl;
+	//cin >> size;
 	array_ptr = new int[size];
 
 	//when done:
+	cout << "Now deleting the array pointer..." << endl;
 	delete [] array_ptr;
-	cout << "What if I try to print the array pointer address or value after deleting it?: " << array_ptr << endl; // same address; interestingly, same as above for int_ptr
-	cout << *array_ptr << endl; // different value; interestingly, same as above for int_ptr
+	
+	cout << "What if I try to print the array pointer address or value after deleting it?: " << array_ptr; // same address; interestingly, same as above for int_ptr
+	cout << " - Same address; interestingly, same as above for int_ptr" << endl;
+	cout << "And printing *array_ptr: " << *array_ptr; // different value; interestingly, same as above for int_ptr
+	cout << " - Different value; interestingly, same as above for int_ptr" << endl;
 
-	//let's do a bad thing
+	cout << "Now let's do a bad thing: pointer to an array of doubles constantly reinitializing without cleaning up...\n";
 	double *dbl_ptr {nullptr}; //pointer to an array of doubles
+	int count = 0;
 	while(true){
 		dbl_ptr = new double[1'000'000]; //1 Mb
+		count++;
+		if (count > 1000) {
+			cout << "Although it's not really *that* dangerous in this instance, if you want to not play this safely, then comment out this break\n";
+			cout << "See comments in the code for details" << endl;
+			break;
+		}
 	} //in Udemy this fails with a bad_alloc error message; in Rocky Linux command line, just says "Killed" 
 	//(If my VM is running at the same time, then the above can also disrupt that.)
 	//I wonder what it does in Mac...
+	//just hangs and spins, easy to kill from Terminal or Activity Monitor
 
 	int arr[] {1,2,3,-1}; //-1 is the stopping value I decided
 	cout << "address of arr: " << arr << "; first element: " << *arr << endl;
@@ -173,7 +187,7 @@ void more_testing(){
 	cout << "2nd element using pointer arithmetic: " << *(arr_ptr + 1) << endl;
 	//this also works with just the array
 	cout << "3rd element using pointer arithmetic on just the array: " << *(arr + 2) << endl;
-	cout << "Looping thru the array using a dereferenced and incremented pointer:\n";
+	cout << "Looping thru the array using a dereferenced and incremented pointer (and a predetermined stopping value):\n";
 	while(*arr_ptr != -1)
 		cout << *arr_ptr++ << " "; //dereference, and then print / increment 
 	cout << endl;
@@ -221,7 +235,10 @@ the variable will be pointing to a new function's activation record
 int *never_do_this(){
 	int size {};
 	//...
-	return &size; //this throws a warning, but not an error
+	return &size; //this throws a warning, but not an error; this is to be expected
+	//Alternatively, if we want to compile without any warnings, could comment out the above line
+	//and just leave this instead:
+	//return nullptr;
 }
 
 int *or_this(){
