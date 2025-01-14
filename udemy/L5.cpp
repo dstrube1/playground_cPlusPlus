@@ -45,12 +45,12 @@ int main()
 	cout << "address of h (from h_ptr): " << h_ptr << endl;
 	(*h_ptr)++;
 	cout << "h after (*h_ptr)++ (must use parentheses) : " << h << endl;
-	
+	*/
 	int i = 0;
 	cout << "i before passByRef: " << i << endl;
 	pass_by_ref(i);
 	cout << "i after passByRef: " << i << endl;
-
+/*
  	int i1 = 1;
 	int i2 = 2;
 	int *ptr1 {&i1};
@@ -235,7 +235,8 @@ the variable will be pointing to a new function's activation record
 int *never_do_this(){
 	int size {};
 	//...
-	return &size; //this throws a warning, but not an error; this is to be expected
+	return &size; // ^^^this compile warning^^^ is safe to ignore
+	//this throws a warning, but not an error; this is to be expected
 	//Alternatively, if we want to compile without any warnings, could comment out the above line
 	//and just leave this instead:
 	//return nullptr;
