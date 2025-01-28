@@ -21,7 +21,7 @@ class Printable{
 	friend ostream &operator<<(ostream &, const Printable &obj);
 	public:
 		virtual void print(ostream &os) const = 0;
-		virtual Printable(){/*not sure if this is permissible:* / cout "Printable destructor\n";};
+		virtual Printable(){/ *not sure if this is permissible:* / cout "Printable destructor\n";};
 };
 
 */
