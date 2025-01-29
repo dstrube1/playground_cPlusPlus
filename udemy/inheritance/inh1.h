@@ -30,7 +30,7 @@ class inh1: /*access specifier:*/ /**/public/**/ /** /protected/ **/ /** /privat
 		//then compile will fail.
 		//also if there is a base constructor with a param, it must be called from derived constructor with a param
 		inh1(string);
-		virtual void display() const final; //final makes sure this can't be overridden anymore
+		virtual void display() const final; //final here makes sure this method can't be overridden anymore
 		string getName();
 		string getProtectedString();
 		virtual void virtualMethod() const override;
