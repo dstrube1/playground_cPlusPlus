@@ -22,7 +22,9 @@ class IPrintable{
 		//If a class has a pure virtual function AND a constructor,
 		//it will compile but won't be useful because it can't be instantiated
 		
-		virtual ~IPrintable(){cout << "IPrintable destructor\n";}
+		virtual ~IPrintable() {cout << "IPrintable destructor\n";}
+		//alternatively, explicitly compiler generated destructor:
+		//virtual ~IPrintable() = default;
 };
 
 
