@@ -3,13 +3,15 @@
 #include "inh0.h"
 #include "inh1.h"
 #include "inh2.h"
+#include "IPrintable.h"
+#include "PrintMe.h"
 #include <vector>
 
 using namespace std;
 
 /*
 # To compile:
-g++ -std=c++14 -o main.o main.cpp inh0.cpp inh1.cpp inh2.cpp
+g++ -std=c++14 -o main.o main.cpp inh0.cpp inh1.cpp inh2.cpp IPrintable.cpp PrintMe.cpp
 
 # without -o, outputs to default a.out
 # without -std=c++14 , {} initializers fail
@@ -36,6 +38,7 @@ Specialization: new classes with specialized attributes
 */
 
 void call_from_reference(inh0 &i0);
+void doStuff(vector<inh0 *> &vec);
 
 //////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////BEGIN main
@@ -64,7 +67,7 @@ int main()
 	i1b.display();
 
 	//static binding example
-	cout << "static binding example: \n";
+	cout << endl << "static binding example: \n";
 	inh0 *inh0_ptr = new inh1();
 	//The following calls inh0 getName, not inh1's:
 	cout << "Even though inh0_ptr is assigned to a new inh1, it calls inh0's getName:\n";
@@ -73,19 +76,19 @@ int main()
 	delete inh0_ptr;
 
 	//run-time polymorphism example
-	cout << "run-time polymorphism example: \n";
+	cout << endl << "run-time polymorphism example: \n";
 	inh1 i1c;
 	call_from_reference(i1c);
 /**/
 	//another example of run-time polymorphism, using smart pointer:
-	cout << "run-time polymorphism via smart pointer example: \n";
+	cout << endl << "run-time polymorphism via smart pointer example: \n";
 	std::unique_ptr<inh0> smart_ptr = std::make_unique<inh1>();
 	smart_ptr->virtualMethod();
 	//We don't have to delete smart pointers.
 	//Note, this automatically calls the inh0 destructor, 
 	//but interestingly doesn't seem to call the inh1 destructor
 	
-	cout << "run-time polymorphism via array example: \n";
+	cout << endl << "run-time polymorphism via array example: \n";
 	inh0 *i0 = new inh0();
 	inh0 *i1 = new inh1();
 	inh0 *i2 = new inh2();
@@ -94,19 +97,40 @@ int main()
 		arr[i]->virtualMethod();
 	}
 
-	cout << "run-time polymorphism via vector example: \n";
+	cout << endl << "run-time polymorphism via vector example: \n";
 	vector<inh0 *> vec {i0, i1, i2};
 	for (auto vec_ptr : vec){
 		vec_ptr->virtualMethod();
 	}
+	cout << "pass a vector of pointers as a reference:\n";
+	doStuff(vec);
 	cout << "deleting inh0 pointer to inh0\n";
 	delete i0;
 	cout << "deleting inh0 pointer to inh1\n";
 	delete i1;
 	cout << "deleting inh0 pointer to inh2\n";
 	delete i2;
+	
+	cout << endl << "using base class references:\n";
+	cout << "(declaring inh1 i1_origin)\n";
+	inh1 i1_origin;
+	cout << "(declaring inh0 &i1_ref and initializing it to inh1 i1_origin)\n";
+	inh0 &i1_ref = i1_origin;
+	cout << "(calling virtualMethod from i1_ref)\n";
+	i1_ref.virtualMethod();
 
-	cout << "Done" << endl;
+	//Trying to instantiate an abstract base class:
+	cout << endl << "interface example:\n";
+	//IPrintable p; //error: variable type 'Printable' is an abstract class
+	//IPrintable *p0 = new IPrintable(); //error: allocating an object of abstract class type 'Printable'
+	IPrintable *p1 = new PrintMe();
+	cout << "Calling print as a function:\n";
+	p1->print(cout);
+	cout << "Testing use of IPrintable / PrintMe p1 with cout:\n";
+	cout << *p1;
+	delete p1;
+
+	cout << "Done" << endl << endl;
 	return 0;
 }
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -121,6 +145,13 @@ void call_from_reference(inh0 &i0){
 	i0.virtualMethod();
 	
 	//Shouldn't matter whether the virtual method is void or actually returns something
+}
+
+//to pass a vector of pointers as a reference (so as to not copy anything):
+void doStuff(vector<inh0 *> &vec){
+	for(const auto i : vec){
+		i->virtualMethod();
+	}
 }
 
 
