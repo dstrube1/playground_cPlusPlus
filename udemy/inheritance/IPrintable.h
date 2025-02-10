@@ -25,6 +25,9 @@ class IPrintable{
 		virtual ~IPrintable() {cout << "IPrintable destructor\n";}
 		//alternatively, explicitly compiler generated destructor:
 		//virtual ~IPrintable() = default;
+		
+		//"Classes that declare virtual functions should always declare a virtual destructor"
+		//^ why?
 };
 
 
