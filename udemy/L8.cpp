@@ -51,6 +51,7 @@ class SomeClass{
 };
 
 void unique_ptr_tests();
+void shared_ptr_tests();
 
 //////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////BEGIN main
@@ -60,6 +61,7 @@ int main()
 /**/
 
 	unique_ptr_tests();
+	shared_ptr_tests();
 
 	shared_ptr<SomeClass> sptr;
 	sptr->method("shared");
@@ -78,6 +80,7 @@ int main()
 //////////////////////////////////////////////////////////////////////////////////////////
 
 void unique_ptr_tests(){
+	cout << "Exploring unique_ptr:\n";
 	unique_ptr<SomeClass> uptr;
 	//Call methods like so:
 	uptr->method("unique");
@@ -149,6 +152,7 @@ void unique_ptr_tests(){
 	//for(auto i : vec) {
 	//error: call to implicitly-deleted copy constructor of 'std::unique_ptr<int>'
 	//but can do this:
+	cout << "Looping thru a vector of unique pointers of ints:" << endl;
 	for(const auto &i : vec) { //this const is optional, but it must be a reference
 		cout << "*i: " << *i << endl;
 	}
@@ -164,4 +168,7 @@ void unique_ptr_tests(){
 	//Interesting, no destructor call for uptr or uptr0, uptr2
 }
 
+void shared_ptr_tests(){
+	//Not unique- can be many shared_ptrs pointing to the same object
+}
 
