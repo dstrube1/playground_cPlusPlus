@@ -60,11 +60,8 @@ int main()
 {
 /**/
 
-	unique_ptr_tests();
+	//unique_ptr_tests();
 	shared_ptr_tests();
-
-	shared_ptr<SomeClass> sptr;
-	sptr->method("shared");
 
 	weak_ptr<SomeClass> wptr;// = new SomeClass("weak");
 	//wptr.method("weak");
@@ -170,5 +167,68 @@ void unique_ptr_tests(){
 
 void shared_ptr_tests(){
 	//Not unique- can be many shared_ptrs pointing to the same object
+	//Can be assigned, copied, and moved
+	
+	//unique pointers can be used to allocate arrays of objects on the heap
+	//but shared pointers don't support managing arrays by default(?)
+	
+	//when use count is 0, then the managed object on the heap is destroyed
+	//simple and effective, but adds overhead, but usually not a big deal
+	
+	shared_ptr<int> sptr0 {new int {100}};
+	cout << "shared pointer sptr0 after initialization: " << *sptr0 << endl;
+	*sptr0 = 200;
+	cout << "shared pointer sptr0 after assignment: " << *sptr0 << endl;
+
+	shared_ptr<SomeClass> sptr;
+	sptr->method("shared");
+	//interesting that the deconstructor doesn't seem to get called
+
+	//can't do this:
+	//delete sptr;
+	//error: cannot delete expression of type 'shared_ptr<SomeClass>'
+	
+	//use_count & reset:
+	cout << "use_count of sptr0 before creating sptr1: " << sptr0.use_count() << endl;
+	shared_ptr<int> sptr1 {sptr0};
+	
+	cout << "use_count of sptr0 after creating sptr1, before sptr0.reset(): " << sptr0.use_count() << endl;
+	cout << "sptr1.use_count(), before sptr0.reset(): " << sptr1.use_count() << endl;
+	
+	sptr0.reset(); //sptr0 is "nulled out"
+	cout << "sptr0.use_count() after reset: " << sptr0.use_count() << endl;
+	cout << "sptr1.use_count() after sptr0's reset: " << sptr1.use_count() << endl;
+	if (!sptr0) cout << "sptr0 is null\n";
+	else cout << "sptr0 is not null\n";
+	//it is null
+	
+	vector <shared_ptr<int>> vec;
+	//unlike unique pointer, can do this - copy:
+	vec.push_back(sptr1);
+	cout << "sptr1.use_count() after adding it to a vector: " << sptr1.use_count() << endl;
+	//2 because 1 is from sptr1 and the other is the copy in the vector
+	
+	//adding null pointer to vector is allowed, but trying to print it = segmentation fault
+	//vec.push_back(sptr0);
+	cout << "Looping thru a vector of shared pointers of ints:" << endl;
+	for(const auto &i : vec){
+		cout << "*i: " << *i << endl;
+	}
+	
+	//make_unique was added in C++14
+	//make_shared has been around since C++11
+	cout << "Reinitializing sptr0 with make_shared" << endl;
+	sptr0 = make_shared<int>(100);
+	sptr1 = sptr0;
+	cout << "sptr0.use_count(): " << sptr0.use_count() << endl;
+	cout << "sptr1.use_count(): " << sptr1.use_count() << endl;
+	cout << "vector still works, oddly enough:" << endl;
+	vec.push_back(sptr0);
+	//what if I try to re-add something that might already be in there?
+	vec.push_back(sptr1);
+	//apparently no problem
+	for(const auto &i : vec){
+		cout << "*i: " << *i << endl;
+	}
 }
 
