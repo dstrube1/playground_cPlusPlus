@@ -38,20 +38,33 @@ operators:
 -> : member selection
 pointer arithmetic not supported (++, --, etc)
 
+When you declare a smart pointer object, that object is placed on the stack
+
 */
 
 class SomeClass{
 	private:
 		string name;
 	public:
-		SomeClass(string n){name = n;}
+		SomeClass(){cout << "SomeClass default ctor\n"; name = "default";}
+		SomeClass(string n){name = n; cout << "SomeClass " << name << " ctor\n";}
 		void method(string type){cout<<"method from SomeClass with " << type << " pointer\n";}
 		void setName(string n){name = n;}
+		string getName(){return name;}
 		~SomeClass(){cout<<"SomeClass destructor for " << name << "\n";}
 };
 
 void unique_ptr_tests();
 void shared_ptr_tests();
+void shared_ptr_param_test(shared_ptr<int> sptr);
+void weak_ptr_tests();
+void custom_deleter_tests();
+void custom_deleter(SomeClass *a_ptr);
+
+//Section 17 Challenge 1
+unique_ptr<vector<shared_ptr<SomeClass>>> make();
+bool fill(vector<shared_ptr<SomeClass>> &vec, int num);
+void display(const vector<shared_ptr<SomeClass>> &vec);
 
 //////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////BEGIN main
@@ -61,13 +74,20 @@ int main()
 /**/
 
 	//unique_ptr_tests();
-	shared_ptr_tests();
-
-	weak_ptr<SomeClass> wptr;// = new SomeClass("weak");
-	//wptr.method("weak");
-	//cout << (*ptr) << endl;
+	//shared_ptr_tests();
+	//weak_ptr_tests();
+	//custom_deleter_tests();
 	
-	//All of these smart pointers will be deleted automatically when they go out of scope
+	//Section 17 Challenge 1:
+	//unique_ptr<vector<shared_ptr<SomeClass>>> vec_ptr;
+	auto vec_ptr = make();
+	cout << "How many data points for the challenge?: ";
+	int num;
+	cin >> num;
+	if (fill(*vec_ptr, num)){
+		display(*vec_ptr);
+	}
+	//Smart pointers are usually deleted automatically when they go out of scope
 	
 	cout << "Done" << endl << endl;
 	return 0;
@@ -189,7 +209,7 @@ void shared_ptr_tests(){
 	//error: cannot delete expression of type 'shared_ptr<SomeClass>'
 	
 	//use_count & reset:
-	cout << "use_count of sptr0 before creating sptr1: " << sptr0.use_count() << endl;
+	cout << "use_count of sptr0 before creating sptr1 (via copy constructor): " << sptr0.use_count() << endl;
 	shared_ptr<int> sptr1 {sptr0};
 	
 	cout << "use_count of sptr0 after creating sptr1, before sptr0.reset(): " << sptr0.use_count() << endl;
@@ -217,8 +237,10 @@ void shared_ptr_tests(){
 	
 	//make_unique was added in C++14
 	//make_shared has been around since C++11
+	//make_shared is more efficient than using new
 	cout << "Reinitializing sptr0 with make_shared" << endl;
 	sptr0 = make_shared<int>(100);
+	cout << "Assigning sptr1 to sptr0" << endl;
 	sptr1 = sptr0;
 	cout << "sptr0.use_count(): " << sptr0.use_count() << endl;
 	cout << "sptr1.use_count(): " << sptr1.use_count() << endl;
@@ -230,5 +252,142 @@ void shared_ptr_tests(){
 	for(const auto &i : vec){
 		cout << "*i: " << *i << endl;
 	}
+	
+	//What if we pass a shared pointer as a parameter by value?
+	cout << "use_count of sptr0 before shared_ptr_param_test: " << sptr0.use_count() << endl;
+	shared_ptr_param_test(sptr0);
+	cout << "use_count of sptr0 after shared_ptr_param_test: " << sptr0.use_count() << endl;
+	
+	//When they go out of scope, the last shared pointer that references an object is the one responsible for cleanup; but that's something I don't have to worry about
+}
+
+void shared_ptr_param_test(shared_ptr<int> sptr){
+	cout << "If passing a shared pointer as a parameter by value, it makes a copy of the pointer itself, not the thing it points to." << endl;
+	cout << "use_count of sptr: " << sptr.use_count() << endl;
+}
+
+class B; //forward declaration, so that class A can use it before it's implemented
+
+class A{
+	shared_ptr<B> b_ptr;
+	public:
+		void set_B(shared_ptr<B> &bp){b_ptr = bp;}
+		A(){cout << "A ctor" << endl;}
+		~A(){cout << "A dtor" << endl;}
+};
+
+class B{
+	//shared_ptr<A> a_ptr;
+	weak_ptr<A> a_ptr;
+	public:
+		void set_A(shared_ptr<A> &ap){a_ptr = ap;}
+		//void set_A(weak_ptr<A> ap){a_ptr = ap;}
+		//Interestingly, we don't have to make this parameter a weak pointer to fix the problem
+		B(){cout << "B ctor" << endl;}
+		~B(){cout << "B dtor" << endl;}
+};
+
+void weak_ptr_tests(){
+	//unlike shared pointer, weak pointer does not participate in owning relationship
+	//a weak pointer is always created from a shared pointer; doesn't affect use_count
+	//used to prevent strong reference cycles
+	//If Class A has a shared_ptr that refers to Class B that has a shared_ptr that refers to A, then this prevents heap deallocation; 
+	//OTOH, if A has a shared_ptr that refers to B which has a weak pointer that refers to A, then heap storage will be deallocated properly
+	//A a;
+	//B b;
+	shared_ptr<A> a_ptr = make_shared<A>();
+	shared_ptr<B> b_ptr = make_shared<B>();
+	a_ptr->set_B(b_ptr);
+	b_ptr->set_A(a_ptr);
+	//If B uses a shared pointer, then the circular reference prevents cleanup
+	//If B uses a weak pointer, then there is no circular reference, & cleanup is good
+
+	//Note, there is no make_weak; just cast a shared as a weak;
+	//weak_ptr<A> test = make_weak<A>();
+	weak_ptr<A> test = a_ptr;
+	//Does it work in the other direction?
+	//shared_ptr<A> a_ptr0 = test;
+	//No: error: no viable conversion from 'weak_ptr<A>' to 'shared_ptr<A>'
+}
+
+void custom_deleter_tests(){
+	//test of custom deleter using a function:
+	cout << "Test of custom deleter using a function for a shared pointer..." << endl;
+	shared_ptr<SomeClass> sc_shared_ptr0 {new SomeClass{"sc_shared_ptr0"}, custom_deleter };
+	//cout << "Test of custom deleter using a function for a unique pointer..." << endl;
+	//unique_ptr<SomeClass> sc_unique_ptr0 {new SomeClass{"sc_unique_ptr0"}, custom_deleter};
+	
+	//tests of custom deleter using a lambda:
+	cout << "Test of custom deleter using a lambda for a shared pointer..." << endl;
+	shared_ptr<SomeClass> sc_shared_ptr1 (new SomeClass{}, [] (SomeClass *sc_shared_ptr1){
+		//Note: this and the destructor message show up after "Done"
+		cout << "Using custom deleter via lambda for a shared pointer" << endl;
+		delete sc_shared_ptr1;
+	});
+	
+	/*
+	cout << "Test of custom deleter using a lambda for a unique pointer..." << endl;
+	unique_ptr<SomeClass> sc_unique_ptr1 (new SomeClass{}, [] (SomeClass *sc_unique_ptr1){
+		//Note: this and the destructor message show up after "Done"
+		cout << "Using custom deleter via lambda for a unique pointer" << endl;
+		delete sc_unique_ptr1;
+	});
+	Supposedly possible with unique pointer, but haven't seen it work yet
+	*/
+}
+
+void custom_deleter(SomeClass *a_ptr){
+	//uncommon need to do more than just destroy object on the heap;
+	//achievable via functions, lambdas, and others
+	//not available if the smart pointer is made with make_shared or make_unique
+	cout << "Deleting smart pointer to SomeClass object from function " << __func__ << endl;
+	//__func__ = this function's name
+	delete a_ptr;
+	//Gets much more complicated when you've got raw pointers to c-structures that are used in c-frameworks which don't have destructors
+}
+
+//Section 17 Challenge 1
+unique_ptr<vector<shared_ptr<SomeClass>>> make(){
+	/*
+	If we want to pre-populate the vector, uncomment this stuff
+	shared_ptr<SomeClass> sp0 = make_shared<SomeClass>("0");
+	shared_ptr<SomeClass> sp1 = make_shared<SomeClass>("1");
+	shared_ptr<SomeClass> sp2 = make_shared<SomeClass>("2");
+
+	vector<shared_ptr<SomeClass>> vec;
+	vec.push_back(sp0);
+	vec.push_back(sp1);
+	vec.push_back(sp2);
+	*/
+
+	//unique_ptr<vector<shared_ptr<SomeClass>>> up = make_unique <vector<shared_ptr<SomeClass>>>();//vec);
+	//return up;
+	return make_unique <vector<shared_ptr<SomeClass>>>();//vec);
+}
+	
+bool fill(vector<shared_ptr<SomeClass>> &vec, int num){
+	if (num <= 0) {
+		cout << "Input must be greater than 0, not " << num << endl;
+		return false;
+	}
+	if (num > 100) {
+		cout << "Input must be less than or equal to 100, not " << num << endl;
+		return false;
+	}
+	for (int i = 0; i < num; i++){
+		//Alternatively, populate with randoms, or with more user input
+		//shared_ptr<SomeClass> sp = make_shared<SomeClass>(to_string(i));
+		//vec.push_back(sp);
+		vec.push_back(make_shared<SomeClass>(to_string(i)));
+	}
+	return true;
+}
+
+void display(const vector<shared_ptr<SomeClass>> &vec){
+	cout << "Here are the contents:\n";
+	for(const auto sp : vec){
+		cout << sp->getName() << " ";
+	}
+	cout << endl;
 }
 
