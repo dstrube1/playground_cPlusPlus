@@ -52,23 +52,47 @@ exception *returnsException();
 //////////////////////////////////////////////////////////////////////////////////////////
 int main()
 {
-/**/
-	
+	//First pass at exception throwing
+	int m = 1;
+	int g = -3;
+	//double mpg = m/g; //zsh: floating point exception 
+	//double mpg = static_cast<double> (m)/g; //inf
+	//double mpg = static_cast<double> (-m)/g; //-inf
+	double mpg = static_cast<double> (0)/g; //nan
+	cout << "mpg: " << mpg << endl; 
+	cerr << "This is the error stream\n";
 	try{
-		int i = 1;
-		int j = 0;
-		cout << "before assigning k...\n";
-		throw 0; //without this, the exception isn't caught
-		double k = i/j;
-		cout << k;
+		if (g == 0)
+		{
+			throw 0;
+		//All subsequent code in this block will be skipped over, 
+		//and outside this block, c++ will look for a catch of what is thrown;
+		//Without try/catch:
+		//libc++abi: terminating with uncaught exception of type int
+		}
+		if (g < 0 && g > -2){ //g == -1
+			throw string{"Can throw a string"};
+		}
+		if (g < -1 && g > -3) //g == -2
+		{
+			throw "If thrown is not cast as string, must be caught as const char *";
+		}
+		int g0 = 0;
+		double mpg0 = m/g0; //zsh: floating point exception 
+
+	}catch(int &caught){ //best practice: catch by reference
+		cout << "Caught this: " << caught << endl; //g == 0
 	}
-	catch(exception e){
-		cout << "caught exception 1" << endl;
+	catch (string &s){
+		cout << "Caught this: " << s << endl; //g == -1
 	}
-	catch(int &ex){
-		cout << "caught exception 1.1" << endl;
+	catch (const char *s){
+		cout << "Caught this: " << s << endl; //g == -2
 	}
-/**/
+	catch (...){//catch anything else, allegedly
+		cerr << "Caught unknown exception." << endl; //not actually caught by the mpg0 calculation
+	}
+/** /
 	
 	for (int i = 0; i < 2; i++){
 		try{
@@ -78,11 +102,11 @@ int main()
 		}
 		catch(exception e){
 			cout << "caught exception 3" << endl;
-		}/*Multiple types of exceptions*/
+		}/*Multiple types of exceptions* /
 		catch(int &ex){
 			cout << "caught exception 2" << endl;
-		}/**/
-	}
+		}
+	}/**/
 	
 	cout << "Done" << endl << endl;
 	return 0;
