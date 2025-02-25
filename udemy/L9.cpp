@@ -46,6 +46,7 @@ class SomeClass{
 
 void throwsExceptions(int i);
 exception *returnsException();
+void overflow_underflow();
 
 //////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////BEGIN main
@@ -54,14 +55,26 @@ int main()
 {
 	//First pass at exception throwing
 	int m = 1;
-	int g = -3;
-	//double mpg = m/g; //zsh: floating point exception 
-	//double mpg = static_cast<double> (m)/g; //inf
-	//double mpg = static_cast<double> (-m)/g; //-inf
-	double mpg = static_cast<double> (0)/g; //nan
-	cout << "mpg: " << mpg << endl; 
+	int g = 0;
 	cerr << "This is the error stream\n";
+	cout << "m: " << m << "; g: " << g << endl;
+	cout << "static_cast<double> (m)/g:" << (static_cast<double> (m)/g) << endl; //inf
+	cout << "static_cast<double> (-m)/g:" << (static_cast<double> (-m)/g) << endl; //-inf
+	cout << "static_cast<double> (0)/g:" << (static_cast<double> (0)/g) << endl; //nan
+	
 	try{
+		//program crashes with the following if m=1 and g=0, even with the "catch (...)":
+		//cout << "m/g:" << (m/g) << endl; //zsh: floating point exception 
+		//1:
+		//https://stackoverflow.com/questions/56729866/i-cannot-catch-and-handle-floating-point-exception
+		//"Floating point exception" is the name of a signal instead of exception.
+		//"Integer divide by zero" is not an exception in standard C++.
+		//2:
+		//https://stackoverflow.com/questions/6121623/catching-exception-divide-by-zero
+
+		//This led me down this rabbit hole:
+		overflow_underflow();
+
 		if (g == 0)
 		{
 			throw 0;
@@ -78,16 +91,18 @@ int main()
 			throw "If thrown is not cast as string, must be caught as const char *";
 		}
 		int g0 = 0;
+		//Interesting: this exception throwing / program crashing line isn't executed 
+		//if it comes after the above exception throwings in the same block
 		double mpg0 = m/g0; //zsh: floating point exception 
 
 	}catch(int &caught){ //best practice: catch by reference
-		cout << "Caught this: " << caught << endl; //g == 0
+		cout << "Caught this int: " << caught << endl; //g == 0
 	}
 	catch (string &s){
-		cout << "Caught this: " << s << endl; //g == -1
+		cout << "Caught this string: " << s << endl; //g == -1
 	}
 	catch (const char *s){
-		cout << "Caught this: " << s << endl; //g == -2
+		cout << "Caught this const char *: " << s << endl; //g == -2
 	}
 	catch (...){//catch anything else, allegedly
 		cerr << "Caught unknown exception." << endl; //not actually caught by the mpg0 calculation
@@ -102,11 +117,11 @@ int main()
 		}
 		catch(exception e){
 			cout << "caught exception 3" << endl;
-		}/*Multiple types of exceptions* /
+		}/ *Multiple types of exceptions* /
 		catch(int &ex){
 			cout << "caught exception 2" << endl;
 		}
-	}/**/
+	}/ **/
 	
 	cout << "Done" << endl << endl;
 	return 0;
@@ -128,4 +143,15 @@ void throwsExceptions(int i){
 
 exception *returnsException(){
 	return new exception;
+}
+
+void overflow_underflow(){
+	cout << "Testing overflow and underflow: " << endl;
+	float largeNumber = numeric_limits<float>::max();
+	float result = largeNumber * 2; // overflow: inf
+	cout << "Overflow result: " << result << endl;
+	
+	float smallNumber = numeric_limits<float>::min();
+    result = smallNumber / largeNumber; //underflow: 0
+	cout << "Underflow result: " << result << endl;
 }
