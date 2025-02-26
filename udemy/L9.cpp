@@ -95,14 +95,17 @@ int main()
 		//if it comes after the above exception throwings in the same block
 		double mpg0 = m/g0; //zsh: floating point exception 
 
-	}catch(int &caught){ //best practice: catch by reference
-		cout << "Caught this int: " << caught << endl; //g == 0
+	}catch(const int &caught){ //best practice: throw by value, catch by reference or const
+		//throw object, not primitive
+		//Can throw from a constructor, especially since they don't return a boolean to indicate an error
+		//Do not throw exceptions from destructors
+		cerr << "Caught this int: " << caught << endl; //g == 0
 	}
 	catch (string &s){
-		cout << "Caught this string: " << s << endl; //g == -1
+		cerr << "Caught this string: " << s << endl; //g == -1
 	}
 	catch (const char *s){
-		cout << "Caught this const char *: " << s << endl; //g == -2
+		cerr << "Caught this const char *: " << s << endl; //g == -2
 	}
 	catch (...){//catch anything else, allegedly
 		cerr << "Caught unknown exception." << endl; //not actually caught by the mpg0 calculation
