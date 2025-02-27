@@ -44,8 +44,17 @@ class SomeClass{
 		~SomeClass(){cout<<"SomeClass destructor for " << name << "\n";}
 };
 
+class MyException : public exception{
+	public:
+		MyException() noexcept = default;
+		~MyException() = default;
+		virtual const char *what() const noexcept{ return "MyException"; }
+};
+//In diagram of C++ standard library exception class hierarchy,
+// ones in orange are c++17 additions
+
 void throwsExceptions(int i);
-exception *returnsException();
+MyException returnsMyException();
 void overflow_underflow();
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -110,21 +119,22 @@ int main()
 	catch (...){//catch anything else, allegedly
 		cerr << "Caught unknown exception." << endl; //not actually caught by the mpg0 calculation
 	}
-/** /
+/**/
 	
-	for (int i = 0; i < 2; i++){
+	for (int i = 0; i <= 2; i++){
 		try{
 			cout << "before throwsExceptions" << endl;
 			throwsExceptions(i);
 			cout << "after throwsExceptions" << endl;
 		}
-		catch(exception e){
-			cout << "caught exception 3" << endl;
-		}/ *Multiple types of exceptions* /
+		catch(const exception &e){
+			cerr << "caught exception 3; what(): " << e.what() << endl;
+			// virtual const char *what() const noexcept is implemented by every concrete child of std::exception
+		} /* Multiple types of exceptions */
 		catch(int &ex){
-			cout << "caught exception 2" << endl;
+			cerr << "caught exception 2" << endl;
 		}
-	}/ **/
+	}/**/
 	
 	cout << "Done" << endl << endl;
 	return 0;
@@ -133,19 +143,23 @@ int main()
 ///////////////////////////END main
 //////////////////////////////////////////////////////////////////////////////////////////
 
-void throwsExceptions(int i){
-	cout << "before throw" << endl;
-	if(i==0)
-		throw new exception;//1
-	else if (i==1)
-		throw returnsException(); //2
-	else 
+void throwsExceptions(int i) {
+	cout << "before throw; i = " << i << endl;
+	if (i==0) {
+		throw exception();//1
+	}
+	else if (i==1) {
+		throw returnsMyException(); //2
+	}
+	else {
 		throw 0;
+	}
 	cout << "after throw" << endl;
 }
 
-exception *returnsException(){
-	return new exception;
+MyException returnsMyException(){
+	//could return a pointer to an exception, but that's not what is thrown in best practice
+	return MyException();
 }
 
 void overflow_underflow(){
