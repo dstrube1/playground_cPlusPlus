@@ -28,7 +28,7 @@ Exceptions are caused by:
 exception handling should not be used for asynchronous code
 
 std:exception
-what() //?
+what()
 
 */
 
@@ -50,8 +50,8 @@ class MyException : public exception{
 		~MyException() = default;
 		virtual const char *what() const noexcept{ return "MyException"; }
 };
-//In diagram of C++ standard library exception class hierarchy,
-// ones in orange are c++17 additions
+//In diagram of C++ standard library exception class hierarchy (L10.jpeg),
+// the ones in orange are c++17 additions
 
 void throwsExceptions(int i);
 MyException returnsMyException();
