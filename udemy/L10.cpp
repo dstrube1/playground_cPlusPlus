@@ -39,6 +39,8 @@ clog: unbuffered, best used for log messages
 */
 
 void booleanStreamManipulation();
+void integerStreamManipulation();
+void floatingPointStreamManipulation();
 
 //////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////BEGIN main
@@ -59,9 +61,13 @@ int main()
 	//common stream manipulators:
 	/*
 	Boolean: boolalpha, noboolalpha
+
 	Integer: dec, hex, oct, showbase, noshowbase, showpos (show postive '+' symbol), noshowpos, uppercase, nouppercase
+
 	Floating point: fixed, scientific, setprecision, showpoint, noshowpoint, showpos, noshowpos
+
 	Field width, justification, and fill: setw, left, right, internal, setfill
+
 	Others: endl, flush (like endl, but doesn't add a newline), skipws, noskipws, ws (whitespace, usually for input streams)
 	*/
 	
@@ -78,6 +84,8 @@ void booleanStreamManipulation(){
 	const bool T = true;
 	const bool F = false;
 	cout << "Pre boolean stream manipulation (ie, default): " << endl;
+	//default behavior:
+	//cout << noboolalpha;
 	cout << "true: " << T << endl;
 	cout << "false: " << F << endl;
 
@@ -96,4 +104,12 @@ void booleanStreamManipulation(){
 	//error: no member named 'noboolalpha' in 'std::ios'; did you mean 'boolalpha'?
 	//manipulator version:
 	cout << reset
+}
+
+void integerStreamManipulation(){
+	
+}
+
+void floatingPointStreamManipulation(){
+	
 }
