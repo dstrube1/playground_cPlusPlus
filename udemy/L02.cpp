@@ -9,12 +9,12 @@ using namespace std;
 
 /*
 # To compile:
-g++ -std=c++20 -o L2.o L2.cpp
+g++ -std=c++20 -o L02.o L02.cpp
 # without -o, outputs to default a.out
 # without -std=c++20, errors from strong_ordering and three-way comparison operator
 
 # To run:
-./L2.o
+./L02.o
 
 */
 
