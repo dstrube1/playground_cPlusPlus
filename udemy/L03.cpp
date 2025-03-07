@@ -12,12 +12,12 @@ using namespace std;
 
 /*
 # To compile:
-g++ -o -std=c++14 L3.o L3.cpp
+g++ -o -std=c++14 L03.o L03.cpp
 # without -o, outputs to default a.out
 # without -std=c++14 , can't use tick marks
 
 # To run:
-./L3.o
+./L03.o
 
 */
 
