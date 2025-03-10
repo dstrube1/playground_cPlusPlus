@@ -13,11 +13,11 @@ using namespace std;
 
 /*
 # To compile:
-g++ -o L4.o L4.cpp
+g++ -o L04.o L04.cpp
 # without -o, outputs to default a.out
 
 # To run:
-./L4.o
+./L04.o
 
 */
 
