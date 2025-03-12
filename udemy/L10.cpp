@@ -41,6 +41,7 @@ clog: unbuffered, best used for log messages
 void booleanStreamManipulation();
 void integerStreamManipulation();
 void floatingPointStreamManipulation();
+void fieldWidthAlignAndFill();
 
 //////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////BEGIN main
@@ -172,13 +173,28 @@ void floatingPointStreamManipulation(){
 		//nouppercase: when displaying scientific notation
 		//noshowpos: no + for positive numbers (is this changeable?)
 	
-	double num {1'234.5678};
+	//To reset precision later on, must first do this:
+	const streamsize ORIGINAL_PRECISION = cout.precision(); 
+	//if not parameter, this^ gets precision
+	//if yes parameter, this^ sets precision
+	cout << "floating point current streamsize: " << ORIGINAL_PRECISION << endl;
+
+	double num;
+	num = 12.34;
+	cout << "12.34 with defaults: " << num << endl;
+	cout << showpoint; //show trailing zeroes up to precision
+	cout << "12.34 with showpoint: " << num << endl;
+
+	// {1'234.5678};
+	num = 1'234.5678;
 	cout << "1,234.5678 with default precision (6 digits): " << num << endl;
 	
 	num = 123'456'789.987654321;
 	cout << "123,456,789.987654321 : " << num << endl;
 	
 	cout << setprecision(9);
+	//alternatively:
+	//cout.precision(9); 
 	//note the rounding: 123456790
 	cout << "123,456,789.987654321 with setprecision(9) : " << num << endl;
 
@@ -211,12 +227,43 @@ void floatingPointStreamManipulation(){
 	
 	num = 12.34;
 	/*
-	come back to this at 5:08, after we know how to reset floating point back to defaults
-	cout << resetiosflags(ios::precision);
-	cout << resetiosflags(ios::fixed);
+	how to reset to defaults? 4 steps
+	*/
+	//1
+	cout.unsetf(ios::scientific | ios::fixed);
+	//alternatively, that is equivalent to this:
+	//cout << resetiosflags(ios::floatfield);
+	
+	//2
+	//cout.unsetf(ios::showpos);
+	//or
 	cout << resetiosflags(ios::showpos);
-	cout << resetiosflags(ios::uppercase);*/
-	//cout << "12.34 with defaults: " << num << endl;
-	//cout << showpoint;
-	//cout << "12.34 with showpoint: " << num << endl;
+	
+	//3
+	//cout.unsetf(ios::showpoint);
+	//or
+	cout << resetiosflags(ios::showpoint);
+	
+	//4
+	//Couple ways to do this:
+	//cout.precision(ORIGINAL_PRECISION); 
+	//But I like this better - this is cleaner (albeit undocumented(?))
+	cout << setprecision(-1);
+	//https://stackoverflow.com/questions/12560291/set-back-default-floating-point-print-precision-in-c
+	
+	//5
+	//one can't tell if uppercase is still active while scientific is turned off, 
+	//but if scientific gets turned back on and uppercase hasn't been reset yet, 
+	//then uppercase will still be active
+	//cout.unsetf(ios::uppercase);
+	//or
+	cout << resetiosflags(ios::uppercase);
+	
+	cout << "12.34 with defaults: " << num << endl;
+	cout << showpoint;
+	cout << "12.34 with showpoint: " << num << endl;
+}
+
+void fieldWidthAlignAndFill(){
+	//
 }
