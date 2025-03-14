@@ -10,7 +10,7 @@ using namespace std;
 
 /*
 # To compile:
-g++ -std=c++14 -o L5.o L5.cpp
+g++ -std=c++14 -o L05.o L05.cpp
 
 # without -o, outputs to default a.out
 
@@ -20,7 +20,7 @@ g++ -std=c++14 -o L5.o L5.cpp
 # After adding more_testing(): without -std=c++14, error from tick marks
 
 # To run:
-./L5.o
+./L05.o
 
 */
 
