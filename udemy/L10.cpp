@@ -53,9 +53,9 @@ int main()
 	// - time of the effect on the stream varies
 	// - can be used as member function or manipulator:
 	//member function / method:
-	cout.width(10);
+	//cout.width(10);
 	//manipulator:
-	cout << setw(10); //overloading the insertion operator
+	//cout << setw(10); //overloading the insertion operator
 	//manipulator will fail to compile if iomanip (or something else that includes it) isn't included
 	//stream manip method won't, but manipulator is usually  preferred practice
 	
@@ -76,7 +76,9 @@ int main()
 	
 	//integerStreamManipulation();
 	
-	floatingPointStreamManipulation();
+	//floatingPointStreamManipulation();
+	
+	fieldWidthAlignAndFill();
 	
 	cout << "Done" << endl << endl;
 	return 0;
@@ -265,5 +267,43 @@ void floatingPointStreamManipulation(){
 }
 
 void fieldWidthAlignAndFill(){
-	//
+	//Field width, justification, and fill: setw, left, right, internal, setfill
+	
+	//Defaults when displaying floating point:
+	//setw - not set by default
+	//left (when no field width set; right when using field width)
+	//fill - not set by default - blank space used, but can set some other character to fill empty spaces
+	
+	//Some of these affect only the next data element put on the stream
+	cout << "Default output settings:\n";
+	double num {1234.5678}; //6 digits of precision with rounding
+	string hello {"Hello"};
+	cout << num << hello << endl;
+	
+	cout << "With setw(10) (with rulers to show number of characters):\n";
+	cout << "setw(10) << num << hello:\n";
+	cout << "12345678901234567890\n";
+	cout << setw(10) << num << hello << endl;
+	//setw(10) affects next data item only; right justified by default with field width of 10
+	
+	cout << "setw(10) << num << setw(10) << hello:\n";
+	cout << "12345678901234567890\n";
+	cout << setw(10) << num << setw(10) << hello << endl;
+	
+	cout << "setw(10) << left << num << setw(10) << right << hello << x:\n";
+	cout << "1234567890123456789012345678901234567890\n";
+	cout << setw(10) << left << num << setw(10) << right << hello << "x" << endl;
+	//note that left only affects num and right only affects hello
+	
+	cout << "setfill('-') << setw(10) << num << hello:\n";
+	cout << "12345678901234567890\n";
+	cout << setfill('-') << setw(10) << num << hello << endl;
+	//setfill is persistent but only works when a data item has a setw associated with it
+	
+	cout << "setfill('-') << setw(10) << left << num << setw(10) << hello:\n";
+	cout << "1234567890123456789012345678901234567890\n";
+	cout << setfill('-') << setw(10) << left << num << setw(10) << hello << endl;
+	//^example of setfill persistence
+	
+	
 }
