@@ -10,13 +10,13 @@ using namespace std;
 
 /*
 # To compile:
-g++ -std=c++11 -o L6.o L6.cpp
+g++ -std=c++11 -o L06.o L06.cpp
 # without -o, outputs to default a.out
 # without -std=c++11, get errors just declaring private data members(?!):
 function definition does not declare parameters
 
 # To run:
-./L6.o
+./L06.o
 
 */
 
