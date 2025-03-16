@@ -13,13 +13,13 @@ using namespace std;
 
 /*
 # To compile:
-g++ -std=c++11 -o L7.o L7.cpp
+g++ -std=c++11 -o L07.o L07.cpp
 # without -o, outputs to default a.out
 # without the -std=c++11, multiple errors for lines with this:
 # : str{nullptr} {
 
 # To run:
-./L7.o
+./L07.o
 
 */
 
