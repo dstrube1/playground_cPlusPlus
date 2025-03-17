@@ -7,13 +7,13 @@ using namespace std;
 
 /*
 # To compile:
-g++ -std=c++14 -o L8.o L8.cpp
+g++ -std=c++14 -o L08.o L08.cpp
 
 # without -o, outputs to default a.out
 # without -std=c++14 , {} initializers fail
 
 # To run:
-./L8.o
+./L08.o
 
 Smart pointers
 
