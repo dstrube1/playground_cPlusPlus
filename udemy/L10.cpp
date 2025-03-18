@@ -4,8 +4,9 @@
 //#include <iomanip> //provides definitions for manipulators used to format stream I/O
 //NOTE: fstream seems to include iomanip, so if fstream is included, then iomanip is redundant
 
-//#include <string>
-//#include <vector>
+//for section19Challenge1:
+#include <string>
+#include <vector>
 
 using namespace std;
 
@@ -42,7 +43,7 @@ void booleanStreamManipulation();
 void integerStreamManipulation();
 void floatingPointStreamManipulation();
 void fieldWidthAlignAndFill();
-
+void section19Challenge1();
 //////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////BEGIN main
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -78,7 +79,9 @@ int main()
 	
 	//floatingPointStreamManipulation();
 	
-	fieldWidthAlignAndFill();
+	//fieldWidthAlignAndFill();
+	
+	section19Challenge1();
 	
 	cout << "Done" << endl << endl;
 	return 0;
@@ -303,7 +306,54 @@ void fieldWidthAlignAndFill(){
 	cout << "setfill('-') << setw(10) << left << num << setw(10) << hello:\n";
 	cout << "1234567890123456789012345678901234567890\n";
 	cout << setfill('-') << setw(10) << left << num << setw(10) << hello << endl;
-	//^example of setfill persistence
+	//^example of setfill persistence	
+}
+
+void section19Challenge1(){
+	//https://gbg.udemy.com/course/beginning-c-plus-plus-programming/learn/lecture/10154720#overview
+	//Not going to fill out the whole challenge, just some interesting stuff here
+	struct City{
+		string name;
+		long population;
+		double cost;
+	};
+	struct Country{
+		string name;
+		vector<City> cities;
+	};
+	struct Tour{
+		string title;
+		vector<Country> countries;
+	};
+	Tour tour
+	{ //Tour instance
+		"Tour ticket prices",
+		{ //vector of countries
+			{ //country 1
+				"Country 1",{ //vector of cities
+					{"City 1a", 1, 1},
+					{"City 1b", 1, 1},
+					{"City 1c", 1, 1}
+				}, //END vector of cities
+			}, //END country 1
+			{ //country 2
+				"Country 2",{ //vector of cities
+					{"City 2a", 1, 1},
+					{"City 2b", 1, 1},
+					{"City 2c", 1, 1}
+				}, //END vector of cities
+			} //END country 2
+		} //END vector of countries
+	}; //END Tour instance
 	
-	
+	cout << "Printing without with stream manipulations: \n";
+	cout << tour.title << endl;
+	for(auto country : tour.countries){
+		cout << country.name << endl;
+		for (auto city : country.cities){
+			cout << "\t" << city.name 
+				<< "\t" << city.population 
+				<< "\t" << city.cost << endl;
+		}
+	}
 }
