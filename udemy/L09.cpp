@@ -6,13 +6,13 @@ using namespace std;
 
 /*
 # To compile:
-g++ -std=c++14 -o L9.o L9.cpp
+g++ -std=c++14 -o L09.o L09.cpp
 
 # without -o, outputs to default a.out
 # without -std=c++14 , {} initializers fail
 
 # To run:
-./L9.o
+./L09.o
 
 Exceptions & exception handling
 
@@ -50,7 +50,7 @@ class MyException : public exception{
 		~MyException() = default;
 		virtual const char *what() const noexcept{ return "MyException"; }
 };
-//In diagram of C++ standard library exception class hierarchy (L10.jpeg),
+//In diagram of C++ standard library exception class hierarchy (L09.jpeg),
 // the ones in orange are c++17 additions
 
 void throwsExceptions(int i);
