@@ -44,6 +44,8 @@ void integerStreamManipulation();
 void floatingPointStreamManipulation();
 void fieldWidthAlignAndFill();
 void section19Challenge1();
+void fstreamTests();
+
 //////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////BEGIN main
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -81,7 +83,9 @@ int main()
 	
 	//fieldWidthAlignAndFill();
 	
-	section19Challenge1();
+	//section19Challenge1();
+	
+	fstreamTests();
 	
 	cout << "Done" << endl << endl;
 	return 0;
@@ -347,7 +351,18 @@ void section19Challenge1(){
 	}; //END Tour instance
 	
 	cout << "Printing without with stream manipulations: \n";
+
+	//centering the title:
+	const int total_width = 70;
+	const int title_length = tour.title.length();
+	cout << setw((total_width - title_length) / 2);
 	cout << tour.title << endl;
+	
+	//Print out a line of dashes in a neat way
+	cout << setw(total_width);
+	cout << setfill('-');
+	cout << "" << endl;
+
 	for(auto country : tour.countries){
 		cout << country.name << endl;
 		for (auto city : country.cities){
@@ -356,4 +371,105 @@ void section19Challenge1(){
 				<< "\t" << city.cost << endl;
 		}
 	}
+}
+
+void fstreamTests(){
+	
+	//https://en.cppreference.com/w/cpp/io/basic_ifstream
+	
+	string text_path {"L10.cpp"};
+	string binary_path {"L10.o"};
+	
+	//fstream used for input and output
+	//fstream in_file_t {text_path, ios::in}; //text mode by default
+	//fstream in_file_b {binary_path, ios::in | ios::binary};
+
+	//ifstream used for only input
+	ifstream in_file_ti {text_path}; //ios::in is optional for ifstream
+	ifstream in_file_bi {binary_path, ios::binary};
+	
+	/*another way to initialize an fstream:
+	ifstream other_file;
+	string other_filename;
+	cout << "input a path to read from: ";
+	cin >> other_filename;
+	other_file.open(other_filename);
+	//or
+	//other_file.open(other_filename, ios::binary);
+	*/
+	
+	if (in_file_ti.is_open()){
+		cout << "file is open from " << text_path << endl;
+	}else{
+		//does file not exist? not found, hardware, or permission issue
+	}
+	/*another way to see if the file was opened successfully:
+	if (in_file_ti){
+		cout << "testing just the file; same as  whether it's open" << endl;
+	}*/
+	
+	//If I do this and then read text, num is 0(?) and text is blank
+	//Why is num 0? By my scan, first num encountered is 1; and then why is text blank?
+	/*
+	int num;
+	in_file_ti >> num;
+	cout << "int read from file:\n" << num << endl;
+	*/
+	
+	string text;
+	in_file_ti >> text;
+	cout << "text read from this file:\n" << text << endl; //"#include"
+	
+	string new_text_path {"L10.txt"};
+	ifstream in_file_new {new_text_path};
+	int num {};
+	double d {};
+	in_file_new >> num;
+	in_file_new >> d >> text;
+	cout << "num: " << num << endl;
+	cout << "d: " << d << endl;
+	cout << "text: " << text << endl;
+	in_file_new.close();
+	
+	string forbidden_path {"forbidden.txt"}; //must be set to chmod 000 / unreadable
+	ifstream in_file_forbidden {forbidden_path};
+	string nonexistent_path {"nonexistent.txt"}; //must not exist
+	ifstream in_file_nonexistent {forbidden_path};
+	if (!in_file_forbidden){
+		cout << "in_file_forbidden is forbidden" << endl;
+	}
+	if (!in_file_nonexistent){
+		cout << "in_file_nonexistent doesn't exist" << endl;
+	}
+
+	getline(in_file_ti, text);
+	//this picks up where previous read left off
+	//There's a version of getline that reads in C-style strings,
+	// and another (^this one^) that reads in C++ strings
+	
+	//If try to read from closed file, no error or warning, just a blank read (!)
+	//Therefore, it's best practice (elsewhere) to always check if file is open before reading
+	cout << "read line from this file:\n" << text << endl; 
+	
+	//to read all the lines:
+	/*
+	while (!in_file.eof()){...}
+	OR
+	while(getline(in_file, text)){...}
+	OR, to read just one char at a time:
+	while(in_file.get(c)){...}
+	*/
+	
+	//What does binary io look like?
+	//getline(in_file_bi, text);
+	//cout << "read line from binary file:\n" << text << endl; 
+	//neat, but terminal doesn't seem to like this, so commenting out for now
+
+	//always close opened files
+	//this succeeds even if the fstream was just declared, not a file opened
+	in_file_ti.close();
+	in_file_bi.close();
+	
+	//This will exit the program, i.e., will not return control to main
+	exit(1);
 }
