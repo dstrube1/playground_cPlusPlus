@@ -449,7 +449,7 @@ void fstreamTests(){
 	
 	//If try to read from closed file, no error or warning, just a blank read (!)
 	//Therefore, it's best practice (elsewhere) to always check if file is open before reading
-	cout << "read line from this file:\n" << text << endl; 
+	cout << "read line from this file (the program currently running), picking up from where the previous read left off:\n" << text << endl; 
 	
 	//to read all the lines:
 	/*
@@ -470,6 +470,41 @@ void fstreamTests(){
 	in_file_ti.close();
 	in_file_bi.close();
 	
-	//This will exit the program, i.e., will not return control to main
-	exit(1);
+	//This doesn't just exit the function; 
+	//it will exit the program, i.e., will not return control to main
+	//exit(1);
+	
+	//On to write to a text file: 
+	//#include <fstream> 
+	//declare fstream or ofstream object
+	//creates file if it doesn't exist - get error when creating file?
+	//if file does exist, contents will be truncated or removed
+	//TODO: writing in binary mode?
+
+	//ios::out = can write but can't read, text mode by default
+	fstream outfile_fstream {"outfile_fstream.txt", std::ios::out};
+
+	//ofstream, writing in binary mode
+	//for ofstream, ios::out is the default
+	//This creates the file if it doesn't exist:
+	ofstream outfile_ofstream {"outfile_ofstream.txt", std::ios::binary};
+
+	//input and output?:
+	//This creates the file if it doesn't exist:
+	fstream in_outfile_fstream {"outfile_fstream.txt", std::ios::out | std::ios::in};
+	
+	outfile_ofstream.close();
+	in_outfile_fstream.close();
+	
+	//TODO: for each of these, test with file with contents = "123"
+	//truncate (discard contents)
+	ofstream out_file_1("outfile_1.txt", ios::trunc);
+	//append on each write
+	ofstream out_file_2("outfile_2.txt", ios::app);
+	//seek to end of stream when opening(?)
+	ofstream out_file_3("outfile_3.txt", ios::ate);
+	
+	out_file_1.close();
+	out_file_2.close();
+	out_file_3.close();
 }
