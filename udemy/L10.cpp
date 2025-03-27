@@ -504,7 +504,34 @@ void fstreamTests(){
 	//seek to end of stream when opening(?)
 	ofstream out_file_3("outfile_3.txt", ios::ate);
 	
+	//Like with reading, must also check to see if the file is open before writing
+	if (out_file_1.is_open()){
+		cout << "out_file_1 is open" << endl;
+		out_file_1 << "output to out_file_1\n";
+	}else{
+		cerr << "out_file_1 is NOT open" << endl;
+	}
+	//Same as this:
+	if (out_file_2){
+		cout << "out_file_2 is open" << endl;
+		out_file_2 << "output to out_file_2\n";
+		
+		//"End line flushes out any unwritten buffers"
+		//Is this just endl, or also \n ?
+	}else{
+		cerr << "out_file_2 is NOT open" << endl;
+	}
+
 	out_file_1.close();
 	out_file_2.close();
 	out_file_3.close();
+	
+	//Checking to make sure the close worked
+	if (out_file_3.is_open()){
+	//This can demonstrate the difference between is_open() and just testing the object:
+	//Just testing the object after closing still returns true
+		cerr << "out_file_3 is open AFTER CLOSING!" << endl;
+	}else{
+		cout << "out_file_3 is closed after closing" << endl;
+	}
 }
