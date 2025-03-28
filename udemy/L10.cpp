@@ -497,7 +497,7 @@ void fstreamTests(){
 	in_outfile_fstream.close();
 	
 	//TODO: for each of these, test with file with contents = "123"
-	//truncate (discard contents)
+	//truncate (discard contents - default behavior)
 	ofstream out_file_1("outfile_1.txt", ios::trunc);
 	//append on each write
 	ofstream out_file_2("outfile_2.txt", ios::app);
@@ -506,15 +506,16 @@ void fstreamTests(){
 	
 	//Like with reading, must also check to see if the file is open before writing
 	if (out_file_1.is_open()){
-		cout << "out_file_1 is open" << endl;
+		cout << "out_file_1 is open; writing to it in trunc mode..." << endl;
 		out_file_1 << "output to out_file_1\n";
 	}else{
 		cerr << "out_file_1 is NOT open" << endl;
 	}
 	//Same as this:
 	if (out_file_2){
-		cout << "out_file_2 is open" << endl;
+		cout << "out_file_2 is open; writing to it in app mode..." << endl;
 		out_file_2 << "output to out_file_2\n";
+		//This will keep adding to the file
 		
 		//"End line flushes out any unwritten buffers"
 		//Is this just endl, or also \n ?
@@ -522,6 +523,12 @@ void fstreamTests(){
 		cerr << "out_file_2 is NOT open" << endl;
 	}
 
+	//Assuming this is open - DO NOT DO THIS IN PRODUCTION
+	cout << "writing to out_file_3 in ate mode..." << endl;
+	out_file_3 << "output to out_file_3\n";
+	//TODO - how is this different from trunc mode?
+	
+	
 	out_file_1.close();
 	out_file_2.close();
 	out_file_3.close();
