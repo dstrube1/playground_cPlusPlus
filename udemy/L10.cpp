@@ -175,6 +175,8 @@ void integerStreamManipulation(){
 	//cout << resetiosflags(ios::showbase);
 	//cout << resetiosflags(ios::showpos);
 	//cout << resetiosflags(ios::uppercase);
+
+	//persistent: hex (and probably others)
 }
 
 void floatingPointStreamManipulation(){
@@ -275,6 +277,8 @@ void floatingPointStreamManipulation(){
 	cout << "12.34 with defaults: " << num << endl;
 	cout << showpoint;
 	cout << "12.34 with showpoint: " << num << endl;
+	
+	//persistent: fixed & setprecision (and probably others)
 }
 
 void fieldWidthAlignAndFill(){
@@ -315,6 +319,7 @@ void fieldWidthAlignAndFill(){
 	cout << "1234567890123456789012345678901234567890\n";
 	cout << setfill('-') << setw(10) << left << num << setw(10) << hello << endl;
 	//^example of setfill persistence	
+	
 }
 
 void section19Challenge1(){
@@ -547,9 +552,8 @@ void fstreamTests(){
 	}
 }
 
-void stringStreamTests(){
-	stringstream ss;
-	
+void stringStreamTests(){	
+	//istringstream
 	int num{};
 	double total {};
 	string name {};
@@ -559,10 +563,52 @@ void stringStreamTests(){
 	cout << "From info (" << info << "), name: " << name << "; num: " << num;
 	cout << "; total: " << total << endl;
 
+	//ostringstream
 	ostringstream oss {};
 	oss << name << " " << num << " " << total;
 	cout << "From name (" << name << "), num (" << num;
 	cout << ") & total (" << total << "), oss: " << oss.str() << endl;
+	//Note that iomanip that works for cout also works for oss, like:
+	//oss << setw(10) << std::left << name;
 	
-	//TODO: Basic data validation
+	//Basic data validation
+	//with 	stringstream:
+
+	//Simple
+	/** /
+	if (ss >> value)
+		cout << "An integer was entered: " << value << endl;
+	else
+		cout << "An integer was not entered. \n";
+	/ **/
+	//A little more complex:
+	int value {};
+	string input {};
+	bool valid = false;
+	do {
+		cout << "Enter an integer: ";
+		cin >> input;
+		stringstream ss {input};
+		if (ss >> value){ //<- This doesn't return a boolean (?!)
+			valid = true; //ergo, must set valid like this
+		}
+		else{
+			cout << "An integer was not entered. Please try again: ";
+		}
+		//how to reinitialize ss? not like any of these:
+		//ss {input};
+		//ss = input;
+		//ss = new stringstream(input);
+		//maybe this?:
+		//https://stackoverflow.com/questions/21924156/how-to-initialize-a-stdstringstream
+		
+		//What if user enters "12.38"? The int 12 will be read into value 
+		//and '.38' will remain in the buffer; ergo:
+		//Must discard input buffer, up to the newline
+		cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n'); 
+		//must use single quotes, not double quotes here        ^^^
+		
+	} while (!valid);
+	cout << "An integer was entered: " << value << endl;
+	/* */
 }
