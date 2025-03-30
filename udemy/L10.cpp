@@ -1,5 +1,6 @@
 #include <iostream> //provides definitions for formatted input and output from/to streams
 #include <fstream> // "														" 	file streams
+#include <sstream> //string streams
 
 //#include <iomanip> //provides definitions for manipulators used to format stream I/O
 //NOTE: fstream seems to include iomanip, so if fstream is included, then iomanip is redundant
@@ -45,6 +46,7 @@ void floatingPointStreamManipulation();
 void fieldWidthAlignAndFill();
 void section19Challenge1();
 void fstreamTests();
+void stringStreamTests();
 
 //////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////BEGIN main
@@ -85,7 +87,9 @@ int main()
 	
 	//section19Challenge1();
 	
-	fstreamTests();
+	//fstreamTests();
+	
+	stringStreamTests();
 	
 	cout << "Done" << endl << endl;
 	return 0;
@@ -541,4 +545,24 @@ void fstreamTests(){
 	}else{
 		cout << "out_file_3 is closed after closing" << endl;
 	}
+}
+
+void stringStreamTests(){
+	stringstream ss;
+	
+	int num{};
+	double total {};
+	string name {};
+	string info {"Moe 1 2.3"};
+	istringstream iss {info};
+	iss >> name >> num >> total;
+	cout << "From info (" << info << "), name: " << name << "; num: " << num;
+	cout << "; total: " << total << endl;
+
+	ostringstream oss {};
+	oss << name << " " << num << " " << total;
+	cout << "From name (" << name << "), num (" << num;
+	cout << ") & total (" << total << "), oss: " << oss.str() << endl;
+	
+	//TODO: Basic data validation
 }
