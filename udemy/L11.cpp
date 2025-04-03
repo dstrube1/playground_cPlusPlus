@@ -93,6 +93,7 @@ class Item{
 */
 template <typename T> 
 class Item{
+	//Note, template classes are usually completely contained in header (.h) files, no .cpp
 	private:
 		T value;
 		string name;
@@ -268,11 +269,22 @@ void classTemplateExamples(){
 	
 	//Note, this kind of TemplatedStruct is such a good idea that it's already defined as type pair
 	pair<string, int> p0 {"p0", 0};
-	cout << "pair: " << p0.first << " " << p0.second << endl;
+	cout << "pair<string, int>: " << p0.first << " " << p0.second << endl;
 	//Can pair handle the BetterTest struct?
 	//pair p1<string, BetterTest> {"p1", bt0};
 	//no
 	
+	//But is a templated class an option?
+	pair<string, Item<int>> p2 ("p2", item1);
+	cout << "pair<string, Item>: " << p2.first << " " << p2.second.get_name() << endl;
+	//yes
+	
 	//There is also a tuple which can handle any number of templateable types
 	tuple <int, int, int> t0 {0,1,2};
+	
+	//Nested templating can be done on the parent / child class
+	Item<Item<int>> item0 ("item0",item1);
+	cout << "Instance of Item with templated datatype Item<int>: name: " << item0.get_name() << endl;
+	cout << "\t\t\t\t\t  ^ value's name: " << item0.get_value().get_name() << endl;
+
 }
