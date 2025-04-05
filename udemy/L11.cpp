@@ -7,6 +7,7 @@
 #include <map>
 #include <set>
 #include <cctype> //for ::toupper
+#include <array>
 
 using namespace std;
 
@@ -63,8 +64,14 @@ Macros:
 
 void algorithmExamples();
 void macroExamples();
-
 void functionTemplateExamples();
+void classTemplateExamples();
+void containersExamples();
+void arrayExamples();
+void displayArray(const array<int, 5> &arr);
+void vectorExamples();
+void displayVector(const vector<int> &vec);
+
 //The following can also use 'class' instead of 'typename' - "essentially equivalent":
 template <typename T> 
 T maxFunctionTemplate(T a, T b){
@@ -78,8 +85,6 @@ template <typename T1, typename T2>
 void typeTest(T1 a, T2 b){
 	cout << "typeTest, where a is type " << typeid(a).name() << " and b is " << typeid(b).name() << endl;
 }
-
-void classTemplateExamples();
 
 /*
 Make this class generic so that value can be an int or double
@@ -148,18 +153,18 @@ class GATC{ //Generic Array Template Class
 		}
 };
 
-void containersExamples();
-
 //////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////BEGIN main
 //////////////////////////////////////////////////////////////////////////////////////////
 int main()
 {
-	algorithmExamples();
+	//algorithmExamples();
 	//macroExamples();
 	//functionTemplateExamples();
 	//classTemplateExamples();
 	//containersExamples();
+	//arrayExamples();
+	vectorExamples();
 	
 	cout << "\nDone\n\n";
 	return 0;
@@ -508,4 +513,154 @@ void containersExamples(){
 	map<string, string> stuff {{"a","1"},{"b","2"}};
 	itM = stuff.begin();
 	cout << "An element in a map: {" << itM->first << "," << itM->second << "}\n";
+}
+
+void arrayExamples(){
+	//use array instead of raw pointers when possible
+	//comes with all iterators which do not invalidate
+	//Added in C++11
+	
+	//In C++11, array must be initialized with double curly braces:
+	//array<int, 5> arr {{1,2,3,4,5}};
+	//In C++14, single curly braces are good enough (and double braces are still accepted)
+	array<int, 5> arr {1,2,3,4,5};
+
+	//common methods:
+	arr.size(); 
+	arr.at(0); //throws exception if out of bounds
+	arr[1]; //no bounds checking
+	arr.front();
+	arr.back();
+	arr.empty();
+	
+	array<int, 5> arr1 {2,3,4,5,6};
+	arr.swap(arr1); //must be the same size
+	//arr.fill(0); //replace everything with 0
+	
+	//raw array address
+	int *data = arr.data();
+	cout << "First element in arr from a data pointer, before changing: " << *data << endl;
+	cout << "Array: ";
+	displayArray(arr);
+	*data = 0;
+	cout << "After changing: " << endl;
+	displayArray(arr);
+	data++;
+	(*data)++;
+	cout << "After moving pointer, and then (*data)++ : " << endl;
+	displayArray(arr);
+	
+	//Max & min
+	//long name for iterator type returned:
+	std::array<int,5>::iterator min_num = std::min_element(arr.begin(), arr.end());
+	//let the compiler figure it out:
+	auto max_num = max_element(arr.begin(), arr.end());
+	cout << "min: " << *min_num << "; max: " << *max_num << endl;
+	
+	//Adjacent find
+	auto adjacent = adjacent_find(arr.begin(), arr.end());
+	if (adjacent != arr.end()){
+		cout << "Adjacent elements found with value: " << *adjacent << endl;
+	}else{
+		cout << "No adjacent elements found." << endl;
+	}
+}
+
+void displayArray(const array<int, 5> &arr){
+	cout << "[ ";
+	for (auto i : arr) cout << i << " ";
+	cout << "]\n";
+}
+
+void vectorExamples(){
+	//direct element access - constant time
+	//add or delete from back: constant time
+	//add or delete anywhere else: linear time
+	//supports all iterators and they may become invalid (e.g., when vector is resized)
+	
+	vector<int> vec {1,2,3};
+	//Overloaded constructor, ten 100s:
+	vector<int> vec1 (10, 100);
+	
+	//like with array, can be reinitialized with assignment:
+	vec1 = {2,4,6,8,10};
+	cout << "vector size: " << vec.size() << endl;
+	cout << "capacity: " << vec.capacity() << endl; //same as size by default; what if add an element, how big does the capacity get?...
+	vec.push_back(0);
+	cout << "capacity after push_back: " << vec.capacity() << endl; //doubled
+	//shrink_to_fit:
+	vec.shrink_to_fit();
+	cout << "capacity after shrink_to_fit: " << vec.capacity() << endl; //shrunk to fit
+	//reserve:
+	vec.reserve(10);
+	cout << "capacity after reserve(10): " << vec.capacity() << endl; // 10
+
+	cout << "max_size: " << vec.max_size() << endl; 
+	//^ 4611686018427387903 = 4,611,686,018,427,387,903 =~ 4.6 quintillion
+	
+	//just like array, subscript access doesn't check for bounds, and .at() does
+	
+	//pop_back() removes last element
+	
+	//emplace_back() efficiently adds to the end with parameters that 
+	//would be used for the constructor of the object to be added; e.g.:
+	vector<pair<string, int>> vec2;
+	vec2.emplace_back("p0", 0);
+	
+	//Same as array:
+	//vec.empty()
+	
+	//vector swap - vectors can be different size, but must be the same type; this works:
+	vec.swap(vec1);
+	//this fails:
+	//vec.swap(vec2);
+	//'vector<int, allocator<int>>' cannot bind to a value of unrelated type 'vector<pair<std::string, int>,
+	
+	//Find and insert:
+	cout << "vec: ";
+	displayVector(vec); // 2 4 6 8 10
+	cout << "vec1: ";
+	displayVector(vec1); // 1 2 3 0
+	auto it1 = find(vec1.begin(), vec1.end(), 3);
+	vec1.insert(it1, 10);
+	cout << "After inserting 10 into vec1 where 3 was: ";
+	displayVector(vec1); // 1 2 10 3 0
+	vec1.insert(it1, vec.begin(), vec.end()); //udemy course said this should be vec1::insert...
+	cout << "After inserting vec into vec1 where 3 was: ";
+	displayVector(vec1); // 1 2 2 4 6 8 10 10 3 0
+	
+	//vec.clear() //this will remove all elements
+	vec1.erase(vec1.begin(), vec1.begin()+2); //+n where n = number of elements to remove from beginning
+	cout << "After erasing from begin to begin + 2: ";
+	displayVector(vec1); // 2 4 6 8 10 10 3 0
+	vec1.erase(vec1.end()-1, vec1.end());
+	cout << "After erasing from end-1 to end: ";
+	displayVector(vec1); // 2 4 6 8 10 10 3
+	
+	//copy and back_inserter:
+	cout << "vec: ";
+	displayVector(vec); // 2 4 6 8 10
+	copy(vec1.begin(), vec1.end(), back_inserter(vec));
+	cout << "vec after copying vec1 into vec using back_inserter: ";
+	displayVector(vec); // 2 4 6 8 10 2 4 6 8 10 10 3
+	
+	//transform
+	vector<int> vec3 = {1,2,3,4,5};
+	vector<int> vec4 = {10,20,30,40,50};
+	vector<int> vec5;
+	transform(vec3.begin(),vec3.end(),vec4.begin(), back_inserter(vec5), 
+		[](int x,int y){ return x * y;});
+	cout << "vec3: ";
+	displayVector(vec3); // 1 2 3 4 5
+	cout << "vec4: ";
+	displayVector(vec4); // 10 20 30 40 50
+	cout << "vec5 after transform (vec3 x * vec4 y): ";
+	displayVector(vec5); // 
+	
+}
+
+void displayVector(const vector<int> &vec){
+	cout << "[ ";
+	for (auto i : vec) cout << i << " ";
+	cout << "]\n";
 }
