@@ -31,10 +31,13 @@ g++ -std=c++14 -o main.o main.cpp
 
 int main()
 {
+	int i = 3;
+	int j = 2;
+	int k = i / j;
+	cout << "int 3 / 2 = " << k << endl; //round down
 
-	
-  cout << "Done\n";
-  return 0;
+	cout << "Done\n";
+	return 0;
 }
 
 /* 
