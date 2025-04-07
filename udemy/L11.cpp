@@ -8,6 +8,7 @@
 #include <set>
 #include <cctype> //for ::toupper
 #include <array>
+#include <deque>
 
 using namespace std;
 
@@ -71,6 +72,9 @@ void arrayExamples();
 void displayArray(const array<int, 5> &arr);
 void vectorExamples();
 void displayVector(const vector<int> &vec);
+void dequeTests();
+void displayDeque(const deque<int> &deck);
+bool is_palindome(const string& s);
 
 //The following can also use 'class' instead of 'typename' - "essentially equivalent":
 template <typename T> 
@@ -164,7 +168,8 @@ int main()
 	//classTemplateExamples();
 	//containersExamples();
 	//arrayExamples();
-	vectorExamples();
+	//vectorExamples();
+	dequeTests();
 	
 	cout << "\nDone\n\n";
 	return 0;
@@ -644,6 +649,18 @@ void vectorExamples(){
 	cout << "vec after copying vec1 into vec using back_inserter: ";
 	displayVector(vec); // 2 4 6 8 10 2 4 6 8 10 10 3
 	
+	//copy_if
+	vec = {1,2,3,4,5};
+	vec1 = {2,4,6,8,10};
+	cout << "vec & vec1 before copy_if: \n";
+	displayVector(vec); 
+	displayVector(vec1); 
+	copy_if(vec.begin(), vec.end(), back_inserter(vec1),
+		[](int x){return x % 2 == 0;});
+	cout << "vec & vec1 after copy_if (allowing only evens into vec1 from vec): \n";
+	displayVector(vec); 
+	displayVector(vec1); 
+	
 	//transform
 	vector<int> vec3 = {1,2,3,4,5};
 	vector<int> vec4 = {10,20,30,40,50};
@@ -663,4 +680,73 @@ void displayVector(const vector<int> &vec){
 	cout << "[ ";
 	for (auto i : vec) cout << i << " ";
 	cout << "]\n";
+}
+
+void dequeTests(){
+	/*
+	Dynamic size, handled automatically; 
+	Elements are not stored in contiguous memory, like a linked list of vectors
+	direct element access and insertion/deletion at front AND back: constant time
+	other insert and removal: linear time
+	all iterators available, may invalidate (like when it changes size)
+	*/
+	deque<int> deck0 {1,2,3,4,5};
+	deque<int> deck1 (10,100); //10 elements, all 100
+	auto front = deck0.front();
+	cout << "front: " << front << endl;
+	auto back = deck0.back();
+	cout << "back: " << back << endl;
+	deck0.push_back(6);
+	deck0.push_front(0);
+	cout << "After pushing to front and back: " << endl;
+	displayDeque(deck0);
+	/*
+	These don't return anything, just delete
+	front = deck0.pop_front();
+	cout << "front after pop_front: " << front << endl;
+	back = deck0.pop_back();
+	cout << "back after pop_back: " << back << endl;
+	*/
+	
+	//Also an option, like in vector:
+	deck0.emplace_front(-1);
+	deck0.emplace_back(7);
+	
+	//copy with front_inserter and back_inserter
+	vector<int> vec {1,2,3};
+	deque <int> deck2;
+	deque <int> deck3;
+	
+	copy(vec.begin(),vec.end(),front_inserter(deck2));
+	cout << "After copying with front_inserter: " << endl;
+	displayDeque(deck2);
+
+	copy(vec.begin(),vec.end(),back_inserter(deck3));
+	cout << "After copying with back_inserter: " << endl;
+	displayDeque(deck3);
+}
+
+void displayDeque(const deque<int> &deck){
+	cout << "[ ";
+	for (auto i : deck) cout << i << " ";
+	cout << "]\n";
+}
+
+bool is_palindome(const string& s){
+	//using deque
+	deque<char> d;
+	
+	for(char c : s){
+		if(std::isalpha(c)) d.push_back(std::toupper(c));
+	}
+	char c1{};
+	char c2{};
+	while(d.size() > 1){
+		c1 = d.front();
+		c2 = d.back();
+		d.pop_front();
+		d.pop_back();
+		if (c1 != c2) return false;
+	}
+	return true;
 }
