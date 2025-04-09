@@ -9,6 +9,8 @@
 #include <cctype> //for ::toupper
 #include <array>
 #include <deque>
+#include <forward_list>
+#include <iterator> //for std::advance
 
 using namespace std;
 
@@ -71,10 +73,18 @@ void containersExamples();
 void arrayExamples();
 void displayArray(const array<int, 5> &arr);
 void vectorExamples();
-void displayVector(const vector<int> &vec);
 void dequeTests();
-void displayDeque(const deque<int> &deck);
 bool is_palindome(const string& s);
+void listAndFListTests();
+
+
+template <typename T> 
+void displayContainer(const T &container){
+	//assuming T is a list, forward_list, vector, or deque
+	cout << "[ ";
+	for (auto c : container) cout << c << " ";
+	cout << "]\n";
+}
 
 //The following can also use 'class' instead of 'typename' - "essentially equivalent":
 template <typename T> 
@@ -169,7 +179,8 @@ int main()
 	//containersExamples();
 	//arrayExamples();
 	//vectorExamples();
-	dequeTests();
+	//dequeTests();
+	listAndFListTests();
 	
 	cout << "\nDone\n\n";
 	return 0;
@@ -320,8 +331,9 @@ void macroExamples(){
 	//even better solution: don't use macros with arguments; use function templates instead
 }
 
-//example of something more complex that a primitive (structs) that can be passed to a function template:
 struct Test{
+	//example of something more complex than a primitive (structs) 
+	//that can be passed to a function template:
 	string s;
 	int i;
 };
@@ -623,43 +635,43 @@ void vectorExamples(){
 	
 	//Find and insert:
 	cout << "vec: ";
-	displayVector(vec); // 2 4 6 8 10
+	displayContainer(vec); // 2 4 6 8 10
 	cout << "vec1: ";
-	displayVector(vec1); // 1 2 3 0
+	displayContainer(vec1); // 1 2 3 0
 	auto it1 = find(vec1.begin(), vec1.end(), 3);
 	vec1.insert(it1, 10);
 	cout << "After inserting 10 into vec1 where 3 was: ";
-	displayVector(vec1); // 1 2 10 3 0
+	displayContainer(vec1); // 1 2 10 3 0
 	vec1.insert(it1, vec.begin(), vec.end()); //udemy course said this should be vec1::insert...
 	cout << "After inserting vec into vec1 where 3 was: ";
-	displayVector(vec1); // 1 2 2 4 6 8 10 10 3 0
+	displayContainer(vec1); // 1 2 2 4 6 8 10 10 3 0
 	
 	//vec.clear() //this will remove all elements
 	vec1.erase(vec1.begin(), vec1.begin()+2); //+n where n = number of elements to remove from beginning
 	cout << "After erasing from begin to begin + 2: ";
-	displayVector(vec1); // 2 4 6 8 10 10 3 0
+	displayContainer(vec1); // 2 4 6 8 10 10 3 0
 	vec1.erase(vec1.end()-1, vec1.end());
 	cout << "After erasing from end-1 to end: ";
-	displayVector(vec1); // 2 4 6 8 10 10 3
+	displayContainer(vec1); // 2 4 6 8 10 10 3
 	
 	//copy and back_inserter:
 	cout << "vec: ";
-	displayVector(vec); // 2 4 6 8 10
+	displayContainer(vec); // 2 4 6 8 10
 	copy(vec1.begin(), vec1.end(), back_inserter(vec));
 	cout << "vec after copying vec1 into vec using back_inserter: ";
-	displayVector(vec); // 2 4 6 8 10 2 4 6 8 10 10 3
+	displayContainer(vec); // 2 4 6 8 10 2 4 6 8 10 10 3
 	
 	//copy_if
 	vec = {1,2,3,4,5};
 	vec1 = {2,4,6,8,10};
 	cout << "vec & vec1 before copy_if: \n";
-	displayVector(vec); 
-	displayVector(vec1); 
+	displayContainer(vec); 
+	displayContainer(vec1); 
 	copy_if(vec.begin(), vec.end(), back_inserter(vec1),
 		[](int x){return x % 2 == 0;});
 	cout << "vec & vec1 after copy_if (allowing only evens into vec1 from vec): \n";
-	displayVector(vec); 
-	displayVector(vec1); 
+	displayContainer(vec); 
+	displayContainer(vec1); 
 	
 	//transform
 	vector<int> vec3 = {1,2,3,4,5};
@@ -668,18 +680,12 @@ void vectorExamples(){
 	transform(vec3.begin(),vec3.end(),vec4.begin(), back_inserter(vec5), 
 		[](int x,int y){ return x * y;});
 	cout << "vec3: ";
-	displayVector(vec3); // 1 2 3 4 5
+	displayContainer(vec3); // 1 2 3 4 5
 	cout << "vec4: ";
-	displayVector(vec4); // 10 20 30 40 50
+	displayContainer(vec4); // 10 20 30 40 50
 	cout << "vec5 after transform (vec3 x * vec4 y): ";
-	displayVector(vec5); // 
+	displayContainer(vec5); // 
 	
-}
-
-void displayVector(const vector<int> &vec){
-	cout << "[ ";
-	for (auto i : vec) cout << i << " ";
-	cout << "]\n";
 }
 
 void dequeTests(){
@@ -699,7 +705,7 @@ void dequeTests(){
 	deck0.push_back(6);
 	deck0.push_front(0);
 	cout << "After pushing to front and back: " << endl;
-	displayDeque(deck0);
+	displayContainer(deck0);
 	/*
 	These don't return anything, just delete
 	front = deck0.pop_front();
@@ -719,17 +725,11 @@ void dequeTests(){
 	
 	copy(vec.begin(),vec.end(),front_inserter(deck2));
 	cout << "After copying with front_inserter: " << endl;
-	displayDeque(deck2);
+	displayContainer(deck2);
 
 	copy(vec.begin(),vec.end(),back_inserter(deck3));
 	cout << "After copying with back_inserter: " << endl;
-	displayDeque(deck3);
-}
-
-void displayDeque(const deque<int> &deck){
-	cout << "[ ";
-	for (auto i : deck) cout << i << " ";
-	cout << "]\n";
+	displayContainer(deck3);
 }
 
 bool is_palindome(const string& s){
@@ -750,3 +750,99 @@ bool is_palindome(const string& s){
 	}
 	return true;
 }
+
+void listAndFListTests(){
+	//sequence containers, non-contiguous in memory
+	//no direct access to elements - no list[n] or list.at(n)
+	//efficient inserting and deleting once an element is found
+	
+	//List: doubly linked list - can go forward or backward
+	//Dynamic size
+	//all iterators available and invalidate when element is deleted
+	list <int> L {1,2,3,4,5}; //also has the overloaded ctor(size,init_value)
+	auto front = L.front();
+	auto back = L.back(); 
+	cout << "initial list: \n";
+	displayContainer(L);
+	cout << "front: " << front << "; back: " << back << endl;
+	//also has push_back, pop_back, push_front, pop_front, emplace_front, and emplace_back
+	
+	//insert with iterator result from find
+	auto it = find(L.begin(), L.end(), 3);
+	L.insert(it, 10); //insert 10 before 3
+	cout << "insert 10 before 3 using iterator: \n";
+	displayContainer(L);
+
+	L.erase(it); //delete 3, new list: 1,2,10,4,5
+	//this invalidates the iterator; 
+	//otherwise, can traverse the list with it++ & it--
+	//it* to dereference
+	cout << "erase at iterator: \n";
+	displayContainer(L);
+
+	L.resize(2); //delete everything down to size = 2; L={1,2}
+	cout << "resize(2): \n";
+	displayContainer(L);
+
+	L.resize(5); //size up to 5; L={1,2,0,0,0}
+	cout << "resize(5): \n";
+	displayContainer(L);
+
+	//forward_list: singly-linked list, uni-directional, less overhead than list
+	//reverse iterators, .size() and .back() (and other backward stuff) not available
+	//otherwise same as list
+	forward_list<int> fL {1,2,3,4,5};
+	auto fL_front = fL.front();
+	cout << "initial forward_list: \n";
+	displayContainer(fL);
+	cout << "front: " << fL_front << "; NO back" << endl;
+
+	//push_front, pop_front, emplace_front
+	
+	//Since there is no .size() method built in, 
+	//if size is ever wanted, then must either first traverse the forward_list and make a count,
+	// or make a count when initializing and update the count on each insert.
+	//Speaking of insert...
+	auto it_fL = find(fL.begin(), fL.end(),3);
+
+	fL.insert_after(it_fL, 10);
+	cout << "forward_list after insert_after((iterator at 3), 10): \n";
+	displayContainer(fL);
+
+	fL.emplace_after(it_fL, 100);
+	cout << "forward_list after emplace_after((iterator at 3), 100): \n";
+	displayContainer(fL);
+
+	fL.erase_after(it_fL);
+	cout << "forward_list after erase_after(iterator at 3): \n";
+	displayContainer(fL);
+	
+	//iterator does not invalidate after erases
+	
+	//same results from resize as those for list
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
