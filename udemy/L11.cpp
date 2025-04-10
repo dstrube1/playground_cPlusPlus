@@ -5,12 +5,13 @@
 #include <utility> //required for std::pair
 #include <list>
 #include <map>
-#include <set>
+#include <set> // for set & multiset
 #include <cctype> //for ::toupper
 #include <array>
 #include <deque>
 #include <forward_list>
 #include <iterator> //for std::advance
+#include <unordered_set> //for unordered_set & unordered_multiset
 
 using namespace std;
 
@@ -65,6 +66,24 @@ Macros:
 #define SQUARE(a) a * a
 #define BETTER_SQUARE(a) (a * a)
 
+class SetTestClass{
+	string name;
+	friend ostream &operator<<(ostream &os, const SetTestClass &stc){
+		os << stc.name;
+		return os;
+	};
+	public: 
+		SetTestClass(string n):name{n} {}
+		bool operator<(const SetTestClass &rhs) const {
+			return true;
+			//return this->name < rhs.name;
+		};
+		bool operator==(const SetTestClass &rhs) const {
+			//return false;
+			return this->name == rhs.name;
+		};
+};
+
 void algorithmExamples();
 void macroExamples();
 void functionTemplateExamples();
@@ -76,7 +95,12 @@ void vectorExamples();
 void dequeTests();
 bool is_palindome(const string& s);
 void listAndFListTests();
-
+void setTests();
+void printInsertResultSTC(pair<set<SetTestClass>::iterator,bool> insertResult);
+void mapTests();
+void stackTests();
+void queueTests();
+void priorityQueueTests();
 
 template <typename T> 
 void displayContainer(const T &container){
@@ -180,7 +204,14 @@ int main()
 	//arrayExamples();
 	//vectorExamples();
 	//dequeTests();
-	listAndFListTests();
+	//listAndFListTests();
+	setTests();
+	/*
+	mapTests();
+	stackTests();
+	queueTests();
+	priorityQueueTests();
+	*/
 	
 	cout << "\nDone\n\n";
 	return 0;
@@ -347,6 +378,7 @@ struct BetterTest{
 	}
 };
 //overload <<
+//if defined in the class, then use the 'friend' modifier
 ostream &operator<<(ostream &os, const BetterTest &bt){
 	os << bt.s;
 	return os;
@@ -772,19 +804,21 @@ void listAndFListTests(){
 	L.insert(it, 10); //insert 10 before 3
 	cout << "insert 10 before 3 using iterator: \n";
 	displayContainer(L);
+	
+	advance(it, -3); //move iterator back 3 spaces, tp point at the 1
 
-	L.erase(it); //delete 3, new list: 1,2,10,4,5
+	L.erase(it); //delete what iterator is pointing to, new list: 2,10,3,4,5
 	//this invalidates the iterator; 
 	//otherwise, can traverse the list with it++ & it--
 	//it* to dereference
 	cout << "erase at iterator: \n";
 	displayContainer(L);
 
-	L.resize(2); //delete everything down to size = 2; L={1,2}
+	L.resize(2); //delete everything down to size = 2; L={2,10}
 	cout << "resize(2): \n";
 	displayContainer(L);
 
-	L.resize(5); //size up to 5; L={1,2,0,0,0}
+	L.resize(5); //size up to 5; L={2,10,0,0,0}
 	cout << "resize(5): \n";
 	displayContainer(L);
 
@@ -822,10 +856,95 @@ void listAndFListTests(){
 	//same results from resize as those for list
 }
 
+void setTests(){
+	//associate container, fast retrieval using a key
+	//usually implemented as a balanced binary tree or hashset
+	//types of sets:
+	//	set
+	//	unordered_set
+	//	multiset
+	//	unordered_multiset
+	//ordered by key, no duplicates allowed
+	//all iterators allowed which are invalidated on delete
+	set<int> sit {1,2,4,5};
+	cout << "initial set: \n";
+	displayContainer(sit);
+	//no concept of front and back
+	
+	//automatically sorts on insert
+	pair<set<int>::iterator,bool> insertResult = sit.insert(3); 
+	cout << "set after insert 3: \n";
+	displayContainer(sit);
+	//try to insert a duplicate:
+	insertResult = sit.insert(3); //quietly fails
+	cout << "set after trying to insert a duplicate: \n";
+	displayContainer(sit);
+	if(insertResult.second){
+		//first is an iterator to the inserted element, or the duplicate's original 
+		cout << "duplicate insert succeeded\n";
+	}else{
+		cout << "duplicate insert failed\n";
+	}
+	
+	//What if the overloaded == always returns false?
+	cout << "\nTesting what happens when trying to insert duplicate of class that overloads "
+		<< "== & <, but == always returns false...\n";
+	set<SetTestClass> setTestClassSet {};
+	SetTestClass stc1("name");
+	cout << "name of stc1: " << stc1 << endl;
+	SetTestClass stc2("name");
+	cout << "name of stc2: " << stc2 << endl;
+	auto insertResultSTC = setTestClassSet.insert(stc1);
+	printInsertResultSTC(insertResultSTC);
+	cout << "Trying to insert stc1 again...\n";
+	insertResultSTC = setTestClassSet.insert(stc1);
+	printInsertResultSTC(insertResultSTC);
+	cout << "Trying to insert stc2...\n";
+	insertResultSTC = setTestClassSet.insert(stc2);
+	printInsertResultSTC(insertResultSTC);
+	cout << endl;
+	//TIL that it doesn't matter if == always returns false; it matters if < always returns true
+		
+	//erase can take either the item being erased (key) or an iterator to it
+	//erasing via iterator is more efficient
+	
+	int num = sit.count(3); //returns 0 or 1
+	cout << "count of element 3: " << num << endl;
+	
+	sit.clear();
+	bool isEmpty = sit.empty();
+	cout << boolalpha;
+	cout << "result of empty() after clear(): " << isEmpty << endl;
 
+	multiset<int> mset {1,2,3,4,5};
+	cout << "initial multiset: \n";
+	displayContainer(mset);
+	mset.insert(3); 
+	cout << "set after insert 3: \n";
+	displayContainer(mset);
 
+	unordered_set<int> uoset {1,2,4,3,5};
+	//unordered, no duplicates allowed
+	//elements can't be modified, must be erased and new element inserted
+	//(presumably for ordered sets, they can be modified in place)
+	//no reverse iterators
+	
+	unordered_multiset<int> uomset {1,2,3,2,4,5};
+	//no reverse iterators allowed
+}
 
+void printInsertResultSTC(pair<set<SetTestClass>::iterator,bool> insertResult){
+	if (insertResult.second){
+		cout << "insert of SetTestClass succeeded\n";
+	}else{
+		cout << "insert of SetTestClass failed\n";
+	}
+}
 
+void mapTests(){}
+void stackTests(){}
+void queueTests(){}
+void priorityQueueTests(){}
 
 
 
