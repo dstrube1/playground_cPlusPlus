@@ -20,7 +20,7 @@ Introduced in C++ 11, expanded in C++14 & C++17
 Types: stateless and stateful
 */
 
-//Function object
+//Function object in class
 class Multiplier{
 	private:
 		int num{};
@@ -31,6 +31,21 @@ class Multiplier{
 			//for any object of the multiplier type
 			return num * n;
 		}
+};
+
+//Function object in struct
+struct Square_Functor{
+	int operator()(const int &n){
+		return n * n;
+	}
+};
+
+//Function object in struct, templated (for a container)
+template <typename T> 
+struct Square_FunctorTemplated{
+	void operator()(const T &n){
+		for(auto t : n) t*= t;
+	}
 };
 
 //Template class for a generic displayer / generic function objects:
@@ -53,8 +68,9 @@ void displayContainer(const T &container);
 //////////////////////////////////////////////////////////////////////////////////////////
 int main()
 {
-	//functionObjectTest();
-	templateClassTest();
+	functionObjectTest();
+	//templateClassTest();
+	//lambdaTest();
 	
 	cout << "\nDone\n\n";
 	return 0;
@@ -84,6 +100,23 @@ void functionObjectTest(){
 	cout << "vector after multiplier function object:\n";
 	displayContainer(vec);
 	
+	Square_Functor sf;
+	int x = 2;
+	cout << "x before call to function object in struct: " << x << endl;
+	x = sf(x);
+	//what if we don't assign it back, since we passed in as reference (&)?
+	//sf(x); //nope, doesn't work that way
+	cout << "x after: " << x << endl;
+	//what if it's a vector? in that case, we'd want to override operator() differently, 
+	//with a for loop
+	cout << "resetting vec:\n";
+	vec = {1,2,3,4};
+	displayContainer(vec);
+	Square_FunctorTemplated<vector<int>> sft;
+	sft(vec);
+	cout << "vec after Square_FunctorTemplated:\n";
+	displayContainer(vec);
+	//boo, no change :(
 }
 
 void templateClassTest(){
@@ -127,5 +160,21 @@ void displayContainer(const T &container){
 }
 
 void lambdaTest(){
-	//
+	vector<int> vec1 {1,2,3,4,5};
+	vector<string> vec2 {"vec2.0", "vec2.1"};
+	cout << "displaying vectors with lambdas:\n";
+	
+	for_each(vec1.begin(), vec1.end(), 
+		[](int x){ cout << x << " ";});
+	cout << endl;
+	for_each(vec2.begin(), vec2.end(), 
+		[](string x){ cout << x << " ";});
+	cout << endl;
+	
+	//lambda make sense if they're simple;
+	//if more than a few lines, use a function object
+	
+	//Compiler generates unnamed function objects from lambda expressions
+	
+	
 }
