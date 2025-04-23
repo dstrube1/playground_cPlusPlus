@@ -19,9 +19,14 @@ Starting here:
 https://www.geeksforgeeks.org/multithreading-in-cpp/#
 */
 
-void func0();
-void func1(string s);
-void func2(string s1, string s2);
+void func0(); //function pointer
+void func1(string s1, string s2);
+
+struct Square_Functor { //from L11
+	void operator()(int x){ // overload () operator
+		cout << "Square_Functor (struct): " << (x * x) << " " << endl;
+	}
+};
 
 //////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////// BEGIN main
@@ -30,10 +35,25 @@ int main()
 {
 	cout << "Before creating the threads...\n";
 	
-	// Create threads that runs the function func
+	string s = "a lambda";
+	
+	// Create threads that run... 
+	//0 - a function pointer 
     thread t0(func0);
-    thread t1(func1, "1");
-    thread t2(func2, "1", "2");
+    //1 - a lambda
+    thread t1([](string t){cout << "Hello from " << t << " " << endl; }, s);
+    //2 - a function with parameters
+    thread t2(func1, "2", "3");
+    //3 - a function object (aka functor) from a struct
+    Square_Functor square_functor;
+    thread t3(square_functor, 3);
+	//4 - a function object (aka functor) from a class
+	//TODO
+	
+    //syntax is like this:
+    //thread thread_name(callable);
+	//where callable is: 
+	//	function pointer, function object, lambda, or member function (static or non)
     
     //Adding a delay before join (and the following printout) shows that the thread starts executing before join, in fact as soon as the thread is created
     for (int i = 0; i < INT_MAX / 2; i++){}
@@ -44,6 +64,16 @@ int main()
     t0.join();  
     t1.join();  
     t2.join();  
+    t3.join();
+    //t4.join();
+    /*
+    Sometimes the output is like this:
+Before creating the threads...
+Hello from func1: Hello from func2: Hello from func0!
+1
+2, 3
+After creating the threads, before joining...
+    */
     
     cout << "Main thread finished.";
 	
@@ -56,13 +86,9 @@ int main()
 
 // Functions to be run by the thread
 void func0() {
-    cout << "Hello from func0!" << endl;
+    cout << "Hello from func0 (function pointer)!" << endl;
 }
 
-void func1(string s) {
-    cout << "Hello from func1: " << s << endl;
-}
-
-void func2(string s1, string s2) {
-    cout << "Hello from func2: " << s1 << ", " << s2 << endl;
+void func1(string s1, string s2) {
+    cout << "Hello from func1(s1, s2): " << s1 << ", " << s2 << endl;
 }
