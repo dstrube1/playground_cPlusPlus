@@ -94,7 +94,7 @@ This is the result of following this [C++ refresher course in udemy](https://gbg
 * * * Iterators
 * * * Algorithms
 * * Generic programming / meta-programming
-* * * template <typename T> 
+* * * template `<typename T>` 
 * * * Macros
 * * * Function object / functor
 * * * Function pointer
@@ -108,7 +108,10 @@ This is the result of following this [C++ refresher course in udemy](https://gbg
 * * * Stateless & stateful (`TODO: udemy acces cut off before getting to this point`)
 
 * L13
-* * `TODO: Multithreading`
+* * Multithreading
+
+* L14
+* * ???
 
 * constructors:
 * * shallow
@@ -121,3 +124,4 @@ This is the result of following this [C++ refresher course in udemy](https://gbg
 * inheritance:
 * * interface example
 * * virtual functions
+
