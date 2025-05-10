@@ -40,6 +40,14 @@ pointer arithmetic not supported (++, --, etc)
 
 When you declare a smart pointer object, that object is placed on the stack
 
+===Update:
+(from https://www.linkedin.com/feed/update/urn:li:activity:7323125750797139969?commentUrn=urn%3Ali%3Acomment%3A%28activity%3A7323125750797139969%2C7323230326141435904%29&dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287323230326141435904%2Curn%3Ali%3Aactivity%3A7323125750797139969%29
+)
+One shall never return an ownership as a raw pointer. Also avoid explicit ‘operator new’ use. Instead consider make_unique and make_shared.
+
+std::make_shared does not support the arrays until C++20, so consider boost::make_shared if you’re on C++17. Just keep in mind, that if you use weak_ptr, the shared_ptr won’t release the array memory (I mean raw memory, not objects allocated in the memory) allocated by std/boost::make_shared until all shared and weak references are destroyed.
+===END Update
+
 */
 
 class SomeClass{
