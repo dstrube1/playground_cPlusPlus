@@ -20,6 +20,9 @@ Starting here:
 https://www.geeksforgeeks.org/multithreading-in-cpp/#
 See also: Thread Management section in ^
 
+TODO: 
+Explore these:
+https://stackoverflow.com/questions/79594753/why-use-a-mutex-and-not-a-semaphore
 */
 
 void func0(); //function pointer
