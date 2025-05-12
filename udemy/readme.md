@@ -105,13 +105,13 @@ This is the result of following this [C++ refresher course in udemy](https://gbg
 * * Lambdas
 * * * Function object
 * * * operator()
-* * * Stateless & stateful (`TODO: udemy acces cut off before getting to this point`)
+* * * Stateless & stateful (`TODO: udemy access cut off before getting to this point`)
 
 * L13
 * * Multithreading
 
 * L14
-* * ???
+* * Sorting and searching
 
 * constructors:
 * * shallow
