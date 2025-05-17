@@ -29,15 +29,28 @@ g++ -std=c++14 -o main.o main.cpp
 
 */
 
+void functionWithNoParams(void);
+
 int main()
 {
 	int i = 3;
 	int j = 2;
 	int k = i / j;
 	cout << "int 3 / 2 = " << k << endl; //round down
+	
+	cout << "Example of \\r:\n";
+	cout << "1\r2 \n";
+	cout << "There was a 1 there before the \\r returned carriage and overwrote it\n";
 
-	cout << "Done\n";
+	functionWithNoParams();
+	
+	cout << "\nDone\n";
 	return 0;
+}
+
+void functionWithNoParams(){ //void in param list here is optional even if it was included in the function declaration before main
+	//from https://en.wikipedia.org/wiki/Compatibility_of_C_and_C%2B%2B
+	cout << "\nA function with no parameters can be specified as such using a void param\n";
 }
 
 /* 
