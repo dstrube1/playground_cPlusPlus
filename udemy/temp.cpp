@@ -15,7 +15,8 @@ g++ -std=c++14 -o temp.o temp.cpp
 
 int main()
 {
-	cout << "1\r2\n";    	
+	
+
 	cout << "\nDone\n\n";
 	return 0;
 }
