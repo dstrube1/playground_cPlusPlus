@@ -29,23 +29,33 @@ g++ -std=c++14 -o main.o main.cpp
 
 */
 
+void intDivsionTest();
+void carriageReturnTest();
 void functionWithNoParams(void);
+void bitwiseTest();
 
 int main()
 {
+	//intDivsionTest();
+	//carriageReturnTest();
+	//functionWithNoParams();
+	bitwiseTest();
+	
+	cout << "\nDone\n";
+	return 0;
+}
+
+void intDivsionTest(){
 	int i = 3;
 	int j = 2;
 	int k = i / j;
 	cout << "int 3 / 2 = " << k << endl; //round down
-	
+}
+
+void carriageReturnTest(){
 	cout << "Example of \\r:\n";
 	cout << "1\r2 \n";
 	cout << "There was a 1 there before the \\r returned carriage and overwrote it\n";
-
-	functionWithNoParams();
-	
-	cout << "\nDone\n";
-	return 0;
 }
 
 void functionWithNoParams(){ //void in param list here is optional even if it was included in the function declaration before main
@@ -58,3 +68,12 @@ In lesson 150, around 14:50 - noexcept? Was this explained, and if so when?
 https://en.cppreference.com/w/cpp/language/noexcept
 https://stackoverflow.com/questions/10787766/when-should-i-really-use-noexcept
 */
+
+//2025-06-13: While brushing up on Go, saw something weird about Go's bitwise operators.
+//This is a test to confirm that it doesn't work in C++ like it does in Go
+void bitwiseTest(){
+	int i = 1;
+	cout << "i before bitwise shift (<< 2): " << i << endl;
+	i = i << 2;
+	cout << "i after bitwise shift: " << i << endl;
+}
