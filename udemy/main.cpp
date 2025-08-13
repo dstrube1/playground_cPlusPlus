@@ -4,7 +4,6 @@
 
 using namespace std;
 
-//compiling and running
 /*
 # To compile:
 # most basic:
@@ -32,6 +31,7 @@ g++ -std=c++14 -o main.o main.cpp
 void intDivsionTest();
 void carriageReturnTest();
 void functionWithNoParams(void);
+//void functionWithNoParams0(void, int);
 void bitwiseTest();
 
 int main()
@@ -49,13 +49,13 @@ void intDivsionTest(){
 	int i = 3;
 	int j = 2;
 	int k = i / j;
-	cout << "int 3 / 2 = " << k << endl; //round down
+	cout << "int 3 / 2 = " << k << endl; //round down: 1.5 => 1
 }
 
 void carriageReturnTest(){
 	cout << "Example of \\r:\n";
 	cout << "1\r2 \n";
-	cout << "There was a 1 there before the \\r returned carriage and overwrote it\n";
+	cout << "There was a 1 there before the \\r returned carriage (return carriaged?) and overwrote it\n";
 }
 
 void functionWithNoParams(){ //void in param list here is optional even if it was included in the function declaration before main
@@ -63,10 +63,17 @@ void functionWithNoParams(){ //void in param list here is optional even if it wa
 	cout << "\nA function with no parameters can be specified as such using a void param\n";
 }
 
+/*void functionWithNoParams0(void x, int y){
+	cout << "Is this possible? No, of course not, silly rabbit!" << endl;
+	// error: 'void' must be the first and only parameter if specified
+}*/
+
 /* 
 In lesson 150, around 14:50 - noexcept? Was this explained, and if so when?
 https://en.cppreference.com/w/cpp/language/noexcept
 https://stackoverflow.com/questions/10787766/when-should-i-really-use-noexcept
+^Explored in noexceptTest.cpp, new and currently one dir up
+
 */
 
 //2025-06-13: While brushing up on Go, saw something weird about Go's bitwise operators.

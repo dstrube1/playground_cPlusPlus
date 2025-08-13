@@ -7,7 +7,7 @@ This is the result of following this [C++ refresher course in udemy](https://gbg
 
 * main
 * * starting point; was putting all code here until it became clear it was becoming unwieldy
-* * currently just a place to display what happens when a quotient of two integers that results in a float is assigned to an int: rounding down
+* * currently just a place to display whatever was the most recent thing I was curious about
 
 * L0
 * * externs and globals
@@ -111,7 +111,7 @@ This is the result of following this [C++ refresher course in udemy](https://gbg
 * * Multithreading
 
 * L14
-* * Sorting and searching
+* * `TODO:` Sorting and searching
 
 * constructors:
 * * shallow

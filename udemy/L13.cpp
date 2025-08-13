@@ -31,7 +31,7 @@ void func2(int j);
 
 struct Square_Functor { //from L11
 	void operator()(int x){ // overload () operator
-		cout << "Square_Functor (struct): " << (x * x) << " " << endl;
+		cout << "Square_Functor (struct): " << (x * x) << "\n";
 	}
 };
 
@@ -42,7 +42,7 @@ class Double_Functor {
 	public:
 		Double_Functor(int x) {this->x = x;} 
 		void operator()() const { 
-			cout << "Double_Functor (class): " << (x + x) << " " << endl;
+			cout << "Double_Functor (class): " << (x + x) << "\n";
 		}
 };
 
@@ -61,26 +61,39 @@ int main()
 {
 	cout << "Before creating the threads...\n";
 	
-	string s = "a lambda";
+	const string labamba = "a lambda";
 	
 	// Create threads that run... 
 	//0 - a function pointer 
+	cout << "Creating a thread from a function pointer... \n";
     thread t0(func0);
+
     //1 - a lambda
-    thread t1([](string t){cout << "Hello from " << t << " " << endl; }, s);
+    cout << "Creating a thread from a lambda... \n";
+    thread t1([](string t){cout << "Hello from " << t << " " << endl; }, labamba);
+
     //2 - a function with parameters
+	cout << "Creating a thread from a function with parameters... \n";
     thread t2(func1, "2", "3");
+
     //3 - a function object (aka functor) from a struct
     Square_Functor square_functor;
+	cout << "Creating a thread from a function with object (aka functor) from a struct... \n";
     thread t3(square_functor, 3);
+
 	//4 - a function object (aka functor) from a class
 	Double_Functor double_functor(3);
+	cout << "Creating a thread from a function with object (aka functor) from a class... \n";
 	thread t4(double_functor);
+
 	//Non-Static and Static Member Function
 	CWF cwf;
 	//non-static
+	cout << "Creating a thread from a non-static member function... \n";
 	thread t5(&CWF::f1, &cwf, 4); //note the & in front of CWF
+
 	//static
+	cout << "Creating a thread from a static member function... \n";
 	thread t6(&CWF::f2, 5); //note the & in front of CWF
 	
     //syntax is like this:
@@ -138,7 +151,9 @@ After creating the threads, before joining...
 
 // Functions to be run by the thread
 void func0() {
-    cout << "Hello from func0 (function pointer)!" << endl;
+    cout << "Hello from func0 (function pointer)!\n"; //<< endl;
+    // if relying on "<< endl" here, then the endl might not come in a timely fashion; 
+    //ie, it might come out with something else split up between 
 }
 
 void func1(string s1, string s2) {
