@@ -36,10 +36,10 @@ void bitwiseTest();
 
 int main()
 {
-	//intDivsionTest();
+	intDivsionTest();
 	//carriageReturnTest();
 	//functionWithNoParams();
-	bitwiseTest();
+	//bitwiseTest();
 	
 	cout << "\nDone\n";
 	return 0;
@@ -50,6 +50,14 @@ void intDivsionTest(){
 	int j = 2;
 	int k = i / j;
 	cout << "int 3 / 2 = " << k << endl; //round down: 1.5 => 1
+	
+	//What does a divide by zero error look like?
+	//j = 0;
+	//k = i / j;
+	//Surprisingly quiet:
+	//zsh: floating point exception  ./main.o
+	
+	//Also surprising that the compiler allowed it to compile without having to be tricky
 }
 
 void carriageReturnTest(){
