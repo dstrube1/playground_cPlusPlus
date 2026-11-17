@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -33,16 +34,18 @@ void carriageReturnTest();
 void functionWithNoParams(void);
 //void functionWithNoParams0(void, int);
 void bitwiseTest();
+int whatYouCantDoInRust();
 
 int main()
 {
-	intDivsionTest();
+	//intDivsionTest();
 	//carriageReturnTest();
 	//functionWithNoParams();
 	//bitwiseTest();
+	int result = whatYouCantDoInRust();
 	
 	cout << "\nDone\n";
-	return 0;
+	return result;
 }
 
 void intDivsionTest(){
@@ -91,4 +94,16 @@ void bitwiseTest(){
 	cout << "i before bitwise shift (<< 2): " << i << endl;
 	i = i << 2;
 	cout << "i after bitwise shift: " << i << endl;
+}
+
+int whatYouCantDoInRust(){
+	//https://www.youtube.com/watch?v=meEXag1XCFw
+	// at 1:18
+	/*
+	TODO: this is not as simple as that ^ video makes it seem.
+	int *ptr = malloc(sizeof(int));
+	free(ptr);
+	*ptr = 42;
+	return 0;
+	*/
 }
