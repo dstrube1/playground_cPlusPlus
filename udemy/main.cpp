@@ -104,6 +104,6 @@ int whatYouCantDoInRust(){
 	int *ptr = malloc(sizeof(int));
 	free(ptr);
 	*ptr = 42;
-	return 0;
 	*/
+	return 0;
 }
